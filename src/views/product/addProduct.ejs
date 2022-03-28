@@ -1,0 +1,100 @@
+<section class="py-4 my-4">
+    <div class="container">
+        <div class="row justify-content-center pb-2">
+            <div class="col-md-7 text-center heading-section ftco-animate">
+                <span class="subheading">Quản lý</span>
+                <h2 class="mb-4">Thêm sản phẩm</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <!-- Form add products -->
+                <form id="add-product-form" action="/admin/product/create" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>Tên sản phẩm</label>
+                            <input name="name" type="text" class="form-control" placeholder="Tên sản phẩm" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Giá bán</label>
+                            <input name="price" type="number" class="form-control" placeholder="Giá bán" min="0" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Giá gốc</label>
+                            <input
+                                name="realPrice"
+                                type="number"
+                                class="form-control"
+                                placeholder="Không bắt buộc"
+                                min="0"
+                            />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Nguyên liệu</label>
+                            <input name="material" type="text" class="form-control" placeholder="Nguyên liệu" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Danh mục</label>
+                            <select class="custom-select form-control" name="category" id="category">
+                                <option value="Cà phê">Cà phê</option>
+                                <option value="Trà sữa">Trà sữa</option>
+                                <option value="Trà trái cây">Trà trái cây</option>
+                                <option value="Đá xay">Đá xay</option>
+                                <option value="Matcha">Matcha</option>
+                                <option value="Đồ uống sẵn">Đồ uống sẵn</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Mô tả sản phẩm</label>
+                            <textarea
+                                class="form-control"
+                                name="description"
+                                rows="5"
+                                placeholder="Mô tả sản phẩm"
+                            ></textarea>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Thêm ảnh mô tả</label>
+                            <input name="image" type="file" class="form-control-file" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <button class="btn btn-primary">Thêm sản phẩm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <label>Ảnh mô tả</label>
+                <img class="image-preview rounded mb-4" src="/images/empty-photo.jpg" width="100%" />
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var fileInput = document.querySelector('input[name="image"]');
+    var imgPreview = document.querySelector('.image-preview');
+    fileInput.addEventListener('change', () => {
+        URL.revokeObjectURL(imgPreview.src);
+        const file = fileInput.files[0];
+        file.preview = URL.createObjectURL(file);
+        imgPreview.src = file.preview;
+    });
+
+    var form = document.querySelector('#add-product-form');
+    var valid = true;
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        form.querySelectorAll('input').forEach((input) => {
+            if (input.name != 'realPrice' && input.value == '') {
+                sAlert.fire('Thất bại!', 'Các thông tin không được bỏ trống', 'warning');
+                valid = false;
+            }
+        });
+        if (valid) {
+            sAlert.fire('Thành công!', 'Đã thêm sản phẩm mới', 'success').then(() => {
+                form.submit();
+            });
+        }
+    });
+</script>

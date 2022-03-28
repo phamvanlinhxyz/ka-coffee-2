@@ -1,0 +1,156 @@
+<section class="py-4 my-4">
+    <div class="container">
+        <div class="bg-white shadow rounded-lg d-block d-sm-flex rounded">
+            <div class="profile-tab-nav border-right responsive-account-header col-md-3 my-3">
+                <div class="p-4">
+                    <div class="img-circle text-center mb-3">
+                        <img
+                            src="/images/avt.jpg"
+                            alt="Image"
+                            width="180"
+                            height="180"
+                            class="rounded-circle img-thumbnail"
+                        />
+                        <h3>Admin</h3>
+                    </div>
+                </div>
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active" href="#"> <i class="far fa-coffee text-center mr-1"></i> Sản phẩm </a>
+                    <a class="nav-link" href="/admin/discounts">
+                        <i class="far fa-percent text-center mr-1"></i> Mã giảm giá
+                    </a>
+                    <a class="nav-link" href="/admin/stories">
+                        <i class="far fa-newspaper text-center mr-1"></i> Tin tức
+                    </a>
+                    <a class="nav-link" href="/admin/orders">
+                        <i class="far fa-shopping-cart text-center mr-1"></i> Đơn hàng
+                    </a>
+                    <a class="nav-link" href="/admin/users">
+                        <i class="far fa-user text-center mr-1"></i> Khách hàng
+                    </a>
+                    <a class="nav-link" href="/admin/statistic">
+                        <i class="far fa-chart-bar text-center mr-1"></i> Thống kê
+                    </a>
+                </div>
+            </div>
+            <div class="tab-content p-3 p-md-4 col-md-9" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
+                    <div class="card mb-4">
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                            <h4 class="m-0 font-weight-bold text-primary">Danh sách sản phẩm</h4>
+                            <a href="/admin/product/create">
+                                <button class="btn btn-primary"><i class="fas fa-plus"></i> Thêm sản phẩm</button>
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-md-7">Tên sản phẩm</th>
+                                            <th class="col-md-3">Giá bán</th>
+                                            <th class="col-md-2">Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% products.forEach(function(product){ %>
+                                        <tr>
+                                            <td>
+                                                <img
+                                                    src="<%= product.image %>"
+                                                    class="rounded-circle"
+                                                    width="30"
+                                                    height="30"
+                                                    alt=""
+                                                />
+                                                <%= product.name %>
+                                            </td>
+                                            <td>
+                                                <%= product.price.toLocaleString("vi", { style: "currency", currency:
+                                                "VND" }) %>
+                                            </td>
+                                            <td>
+                                                <a href="/admin/product/<%= product.slug %>/edit">
+                                                    <button class="btn btn-success btn-sm">
+                                                        <i class="far fa-pen"></i>
+                                                    </button>
+                                                </a>
+                                                <button
+                                                    class="btn btn-danger btn-sm ml-2"
+                                                    onclick="deleteProduct('<%= product.slug %>')"
+                                                >
+                                                    <i class="far fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <% if (pages > 1) { %>
+                        <div class="col text-center mb-3">
+                            <div class="block-27">
+                                <ul>
+                                    <li>
+                                        <% if (page > 1) { %>
+                                        <a href="/admin/products?page=<%= page - 1 %>">
+                                            <i class="far fa-angle-left"></i>
+                                        </a>
+                                        <% } else { %>
+                                        <a href="#">
+                                            <i class="far fa-angle-left"></i>
+                                        </a>
+                                        <% } %>
+                                    </li>
+                                    <% for(var i = 1; i <= pages; i++) { %> <% if (page == i) { %>
+                                    <li class="active">
+                                        <a href="/admin/products?page=<%= i %>"> <%= i %> </a>
+                                    </li>
+                                    <% } else { %>
+                                    <li>
+                                        <a href="/admin/products?page=<%= i %>"> <%= i %> </a>
+                                    </li>
+                                    <% } %> <% } %>
+                                    <li>
+                                        <% if (page < pages) { %>
+                                        <a href="/admin/products?page=<%= page + 1 %>">
+                                            <i class="far fa-angle-right"></i>
+                                        </a>
+                                        <% } else { %>
+                                        <a href="#">
+                                            <i class="far fa-angle-right"></i>
+                                        </a>
+                                        <% } %>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<form id="delete-product" method="post"></form>
+<script>
+    var deleteForm = document.getElementById('delete-product');
+    const deleteProduct = (slug) => {
+        sAlert
+            .fire({
+                title: 'Bạn có chắc chắn?',
+                text: 'Sản phẩm sẽ được xóa khỏi hệ thống!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy',
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    deleteForm.action = `/admin/product/${slug}/delete?_method=DELETE`;
+                    deleteForm.submit();
+                }
+            });
+    };
+</script>

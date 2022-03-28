@@ -1,0 +1,100 @@
+<section class="ftco-section ftco-no-pt ftco-no-pb mt-5">
+    <div class="container">
+        <h2 class="text-center font-weight-bold">Đơn hàng # <%= order._id.toString().slice(16, 24) %></h2>
+        <div class="my-4 bg-white shadow rounded p-3">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="col-md-1 text-center">STT</th>
+                        <th class="col-md-4">Sản phẩm</th>
+                        <th class="col-md-2 text-center">Giá</th>
+                        <th class="col-md-2 text-center">Số lượng</th>
+                        <th class="col-md-1 text-center">Size</th>
+                        <th class="col-md-2 text-center">Tổng cộng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% order.orderItems.forEach(function(item, index){ %>
+                    <tr class="cart-item">
+                        <td class="text-center"><%= index + 1 %></td>
+                        <td class="cart-txt-left">
+                            <img
+                                src="<%= item.product.image %>"
+                                alt=""
+                                class="rounded-circle mr-2"
+                                width="40"
+                                height="40"
+                            />
+                            <a href="/menu/<%= item.product.slug %>" class="ka-link"> <%= item.product.name %> </a>
+                        </td>
+                        <td class="text-center">
+                            <%= item.product.price.toLocaleString('vi', { style: 'currency', currency: 'VND', }) %>
+                        </td>
+
+                        <td class="text-center"><%= item.amount %></td>
+                        <td class="text-center"><%= item.size %></td>
+                        <td class="cart-price text-center">
+                            <%= (item.amount * item.product.price).toLocaleString('vi', { style: 'currency', currency:
+                            'VND', }) %>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Thông tin người nhận</h5>
+                <div class="my-4 bg-white shadow rounded p-3 order-info">
+                    <p><b><%= order.name %></b></p>
+                    <% if(order.form == 'Đặt online') { %>
+                    <p>Địa chỉ: <%= order.address %></p>
+                    <p>Số điện thoại: <%= order.phone %></p>
+                    <% } %>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h5>Thông tin đơn hàng</h5>
+                <div class="my-4 bg-white shadow rounded p-3 order-info">
+                    <p>Hình thức mua: <%= order.form %></p>
+                    <% if(order.form == 'Đặt online') { %>
+                    <p>Phí giao hàng: <%= (20000).toLocaleString('vi', { style: 'currency', currency: 'VND', }) %></p>
+                    <% } %>
+                    <p>Trạng thái đơn: <%= order.status %></p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h5>Thông tin hóa đơn</h5>
+                <div class="my-4 bg-white shadow rounded p-3 order-info">
+                    <div class="d-flex justify-content-between">
+                        <span>Tạm tính</span>
+                        <span class="cart-price">
+                            <%= order.subtotal.toLocaleString('vi', { style: 'currency', currency: 'VND', }) %>
+                        </span>
+                    </div>
+                    <% if(order.form == 'Đặt online') { %>
+                    <div class="d-flex justify-content-between">
+                        <span>Phí giao hàng</span>
+                        <span class="cart-price">
+                            <%= (20000).toLocaleString('vi', { style: 'currency', currency: 'VND', }) %>
+                        </span>
+                    </div>
+                    <% } %>
+                    <div class="d-flex justify-content-between">
+                        <span>Giảm giá</span>
+                        <span class="cart-price">
+                            <%= (0).toLocaleString('vi', { style: 'currency', currency: 'VND', }) %>
+                        </span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between">
+                        <span>Tổng cộng</span>
+                        <span class="cart-price">
+                            <%= order.total.toLocaleString('vi', { style: 'currency', currency: 'VND', })%>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

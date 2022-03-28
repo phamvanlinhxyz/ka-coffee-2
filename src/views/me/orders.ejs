@@ -1,0 +1,169 @@
+<section class="py-4 my-4">
+    <div class="container">
+        <div class="bg-white shadow rounded-lg d-block d-sm-flex rounded">
+            <div class="profile-tab-nav border-right responsive-account-header col-md-3 my-3">
+                <div class="p-4">
+                    <div class="img-circle text-center mb-3">
+                        <img
+                            src="/images/avt.jpg"
+                            alt="Image"
+                            width="180"
+                            height="180"
+                            class="rounded-circle img-thumbnail"
+                        />
+                        <h3><%= user.name %></h3>
+                        <span>Hạng <%= user.rank %> - <%= user.score %> điểm</span>
+                    </div>
+                </div>
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link" href="/me/account"> <i class="far fa-home text-center mr-1"></i> Tài khoản </a>
+                    <a class="nav-link" href="/me/password"> <i class="far fa-key text-center mr-1"></i> Mật khẩu </a>
+                    <a class="nav-link active" href="#">
+                        <i class="far fa-shopping-cart text-center mr-1"></i>
+                        Đơn mua
+                    </a>
+                    <a class="nav-link" href="/me/discounts">
+                        <i class="far fa-percent text-center mr-1"></i> Mã giảm giá
+                    </a>
+                </div>
+            </div>
+            <div class="tab-content p-4 p-md-5 col-md-9" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
+                    <h3 class="mb-4">Danh sách đơn mua</h3>
+                    <div class="table-responsive p-3 border rounded mb-4">
+                        <h4>Chờ shipper</h4>
+                        <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-4">Mã đơn</th>
+                                    <th class="col-md-3 text-center">Số lượng</th>
+                                    <th class="col-md-3 text-center">Tổng tiền</th>
+                                    <th class="col-md-2 text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% orders.forEach(function(order){ %> <% if(order.status == 'Chờ shipper') { %>
+                                <tr>
+                                    <td># <%= order._id.toString().slice(16, 24) %></td>
+                                    <td class="text-center"><%= order.orderItems.length %></td>
+                                    <td class="text-center cart-price">
+                                        <%= order.total.toLocaleString("vi", { style: "currency", currency: "VND" }) %>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="/order/detail/<%= order._id %>" title="Xem chi tiết">
+                                            <button class="btn btn-success btn-sm">
+                                                <i class="far fa-eye"></i>
+                                            </button>
+                                        </a>
+                                        <button class="btn btn-danger btn-sm ml-2" title="Yêu cầu hủy đơn">
+                                            <i class="far fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <% } %> <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-responsive p-3 border rounded mb-4">
+                        <h4>Shipper đang giao</h4>
+                        <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-4">Mã đơn</th>
+                                    <th class="col-md-3 text-center">Số lượng</th>
+                                    <th class="col-md-3 text-center">Tổng tiền</th>
+                                    <th class="col-md-2 text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% orders.forEach(function(order){ %> <% if(order.status == 'Shipper đang giao') { %>
+                                <tr>
+                                    <td># <%= order._id.toString().slice(16, 24) %></td>
+                                    <td class="text-center"><%= order.orderItems.length %></td>
+                                    <td class="text-center cart-price">
+                                        <%= order.total.toLocaleString("vi", { style: "currency", currency: "VND" }) %>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="/order/detail/<%= order._id %>" title="Xem chi tiết">
+                                            <button class="btn btn-success btn-sm">
+                                                <i class="far fa-eye"></i>
+                                            </button>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <% } %> <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-responsive p-3 border rounded mb-4">
+                        <h4>Giao thành công</h4>
+                        <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-4">Mã đơn</th>
+                                    <th class="col-md-3 text-center">Số lượng</th>
+                                    <th class="col-md-3 text-center">Tổng tiền</th>
+                                    <th class="col-md-2 text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% orders.forEach(function(order){ %> <% if(order.status == 'Giao thành công') { %>
+                                <tr>
+                                    <td># <%= order._id.toString().slice(16, 24) %></td>
+                                    <td class="text-center"><%= order.orderItems.length %></td>
+                                    <td class="text-center cart-price">
+                                        <%= order.total.toLocaleString("vi", { style: "currency", currency: "VND" }) %>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="/order/detail/<%= order._id %>" title="Xem chi tiết">
+                                            <button class="btn btn-success btn-sm">
+                                                <i class="far fa-eye"></i>
+                                            </button>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <% } %> <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-responsive p-3 border rounded mb-4">
+                        <h4>Mua tại quán</h4>
+                        <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-4">Mã đơn</th>
+                                    <th class="col-md-3 text-center">Số lượng</th>
+                                    <th class="col-md-3 text-center">Tổng tiền</th>
+                                    <th class="col-md-2 text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% orders.forEach(function(order){ %> <% if(order.status == 'Đã thanh toán') { %>
+                                <tr>
+                                    <td># <%= order._id.toString().slice(16, 24) %></td>
+                                    <td class="text-center"><%= order.orderItems.length %></td>
+                                    <td class="text-center cart-price">
+                                        <%= order.total.toLocaleString("vi", { style: "currency", currency: "VND" }) %>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="/order/detail/<%= order._id %>" title="Xem chi tiết">
+                                            <button class="btn btn-success btn-sm">
+                                                <i class="far fa-eye"></i>
+                                            </button>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <% } %> <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<% if(message != '') { %>
+<script>
+    sAlert.fire('Thành công!', '<%= message %>', 'success');
+</script>
+<% } %>

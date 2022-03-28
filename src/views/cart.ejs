@@ -1,0 +1,166 @@
+<section class="py-4 my-4">
+    <div class="container">
+        <a href="/menu"> <i class="far fa-long-arrow-alt-left"></i> Tiếp tục mua hàng </a>
+        <div class="cart mt-4 bg-white shadow rounded p-3"></div>
+        <div class="check-out mt-5 bg-white shadow rounded p-3 d-none"></div>
+    </div>
+</section>
+<script>
+    const ordersItem = JSON.parse(localStorage.getItem('orders'));
+    var cart = document.querySelector('.cart');
+    var checkOut = document.querySelector('.check-out');
+    var subtotal = 0;
+
+    if (!ordersItem || ordersItem.length == 0) {
+        cart.innerHTML = `<div class="d-flex flex-column align-items-center justify-content-center mb-5">
+            <img src="/images/cart-empty.png" alt="" />
+            <h3>Giỏ hàng trống!</h3>
+        </div>`;
+    } else {
+        var html = `
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th class="text-center d-none d-sm-table-cell">Giá</th>
+                        <th class="text-center d-none d-sm-table-cell">Số lượng</th>
+                        <th class="text-center d-none d-sm-table-cell">Size</th>
+                        <th class="text-center d-none d-sm-table-cell">Thành tiền</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+             <tbody>
+        `;
+        ordersItem.forEach((item) => {
+            subtotal += item.amount * item.price;
+            html += `
+                <tr class="cart-item">
+                    <td>
+                        <a class="ka-link" href="/menu/${item.slug}">
+                            <img src="${item.image}" alt="" class="rounded-circle mr-2" width="40" height="40" />
+                            ${item.name}
+                        </a>
+                    </td>
+                    <td class="text-center d-none d-sm-table-cell">${item.price.toLocaleString('vi', {
+                        style: 'currency',
+                        currency: 'VND',
+                    })}</td>
+                    <td class="text-center d-none d-sm-table-cell">
+                        <span class="cart-reduce" onclick="reduceItem('${item.id}')">-</span>
+                        <span class="cart-num num-${item.id}">${item.amount}</span>
+                        <span class="cart-add">+</span>
+                    </td>
+                    <td class="text-center d-none d-sm-table-cell">${item.size}</td>
+                    <td class="text-center d-none d-sm-table-cell cart-price">${(
+                        item.amount * item.price
+                    ).toLocaleString('vi', {
+                        style: 'currency',
+                        currency: 'VND',
+                    })}</td>
+                    <td class="text-center">
+                        <button class="btn btn-danger btn-sm" type="button" onclick="deleteItem('${
+                            item.id
+                        }')"><i class="far fa-trash"></i></button>
+                    </td>
+                </tr>
+            `;
+        });
+        html += ' </tbody></table>';
+        cart.innerHTML = html;
+        var checkOutHtml = `
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Tên khách hàng</label>
+                        <input type="text" name="name" class="form-control" value="<%= user.name %>" />
+                    </div>
+                    <div class="form-group">
+                        <label>Địa chỉ</label>
+                        <input type="text" name="address" class="form-control" value="<%= user.address %>" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Số điện thoại</label>
+                        <input type="text" name="phone" class="form-control" value="<%= user.phone %>" />
+                    </div>
+                    <div class="form-group">
+                        <label>Mã giảm giá</label>
+                        <select type="text" name="discount" class="custom-select form-control">
+                            <option value="">Không áp dụng mã giảm giá</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex justify-content-between">
+                        <span>Tạm tính</span>
+                        <span class="cart-price">${subtotal.toLocaleString('vi', {
+                            style: 'currency',
+                            currency: 'VND',
+                        })}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Tiền ship</span>
+                        <span class="cart-price">${(20000).toLocaleString('vi', {
+                            style: 'currency',
+                            currency: 'VND',
+                        })}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Giảm giá</span>
+                        <span class="cart-price">${(0).toLocaleString('vi', {
+                            style: 'currency',
+                            currency: 'VND',
+                        })}</span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between">
+                        <span>Tổng cộng</span>
+                        <span class="cart-price">${(subtotal + 20000).toLocaleString('vi', {
+                            style: 'currency',
+                            currency: 'VND',
+                        })}</span>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-primary w-100">Đặt hàng</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        checkOut.innerHTML = checkOutHtml;
+        checkOut.classList.remove('d-none');
+    }
+
+    const deleteItem = (id) => {
+        const filterItem = ordersItem.filter((item) => {
+            return item.id != id;
+        });
+
+        sAlert
+            .fire({
+                title: 'Bạn có chắc chắn?',
+                text: 'Sản phẩm sẽ được xóa khỏi đơn hàng!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy',
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.setItem('orders', JSON.stringify(filterItem));
+                    window.location.href = '/cart';
+                }
+            });
+    };
+
+    const reduceItem = (id) => {
+        var cartNum = document.querySelector(`.num-${id}`);
+        ordersItem.forEach((item) => {
+            if (item.id == id) {
+                item.amount > 1 ? item.amount-- : item.amount;
+                cartNum.innerHTML = item.amount;
+            }
+        });
+        localStorage.setItem('orders', JSON.stringify(ordersItem));
+    };
+</script>

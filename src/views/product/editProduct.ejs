@@ -1,0 +1,113 @@
+<section class="py-4 my-4">
+    <div class="container">
+        <div class="row justify-content-center pb-2">
+            <div class="col-md-7 text-center heading-section ftco-animate">
+                <span class="subheading">Chỉnh sửa sản phẩm</span>
+                <h2 class="mb-4"><%= product.name %></h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <!-- Form add products -->
+                <form
+                    id="edit-product-form"
+                    action="/admin/product/<%= product.slug %>/edit?_method=PUT"
+                    method="post"
+                    enctype="multipart/form-data"
+                >
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>Tên sản phẩm</label>
+                            <input name="name" type="text" class="form-control" value="<%= product.name %>" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Giá bán</label>
+                            <input
+                                name="price"
+                                type="number"
+                                class="form-control"
+                                value="<%= product.price %>"
+                                min="0"
+                            />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Giá gốc</label>
+                            <input
+                                name="realPrice"
+                                type="number"
+                                class="form-control"
+                                value="<%= product.realPrice %>"
+                                min="0"
+                            />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Nguyên liệu</label>
+                            <input name="material" type="text" class="form-control" value="<%= product.material %>" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Danh mục</label>
+                            <select class="form-control" name="category" id="category">
+                                <option value="<%= product.category %>">-- Chọn danh mục --</option>
+                                <option value="Cà phê">Cà phê</option>
+                                <option value="Trà sữa">Trà sữa</option>
+                                <option value="Trà trái cây">Trà trái cây</option>
+                                <option value="Đá xay">Đá xay</option>
+                                <option value="Matcha">Matcha</option>
+                                <option value="Đồ uống sẵn">Đồ uống sẵn</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Mô tả sản phẩm</label>
+                            <textarea class="form-control" name="description" rows="5">
+<%= product.description %></textarea
+                            >
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Sửa ảnh mô tả</label>
+                            <input name="image" type="file" class="form-control-file" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <button class="btn btn-primary">Cập nhật sản phẩm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <label>Ảnh mô tả</label>
+                <img class="image-preview rounded mb-4" src="<%= product.image %>" width="100%" />
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var fileInput = document.querySelector('input[name="image"]');
+    var imgPreview = document.querySelector('.image-preview');
+    fileInput.addEventListener('change', () => {
+        URL.revokeObjectURL(imgPreview.src);
+        const file = fileInput.files[0];
+        file.preview = URL.createObjectURL(file);
+        imgPreview.src = file.preview;
+    });
+
+    var form = document.querySelector('#edit-product-form');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        sAlert
+            .fire({
+                title: 'Bạn có chắc chắn?',
+                text: 'Những thay đổi về sản phẩm sẽ được cập nhật!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Cập nhật',
+                cancelButtonText: 'Hủy',
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    sAlert.fire('Thành công!', 'Sản phẩm đã được cập nhật!', 'success').then(() => {
+                        form.submit();
+                    });
+                }
+            });
+    });
+</script>
