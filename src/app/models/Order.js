@@ -23,7 +23,7 @@ const Order = new mongoose.Schema(
             enum: [
                 'Chờ shipper',
                 'Shipper đang giao',
-                'Giao thàng công',
+                'Giao thành công',
                 'Đã hủy',
                 'Đã thanh toán',
             ],

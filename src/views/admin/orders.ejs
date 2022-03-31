@@ -11,25 +11,32 @@
                             height="180"
                             class="rounded-circle img-thumbnail"
                         />
-                        <h3><%= user.name %></h3>
-                        <span>Hạng <%= user.rank %> - <%= user.score %> điểm</span>
+                        <h3>Admin</h3>
                     </div>
                 </div>
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                    <a class="nav-link" href="/me/account"> <i class="far fa-home text-center mr-1"></i> Tài khoản </a>
-                    <a class="nav-link" href="/me/password"> <i class="far fa-key text-center mr-1"></i> Mật khẩu </a>
-                    <a class="nav-link active" href="#">
-                        <i class="far fa-shopping-cart text-center mr-1"></i>
-                        Đơn mua
+                    <a class="nav-link" href="/admin/products">
+                        <i class="far fa-coffee text-center mr-1"></i> Sản phẩm
                     </a>
-                    <a class="nav-link" href="/me/discounts">
+                    <a class="nav-link" href="/admin/discounts">
                         <i class="far fa-percent text-center mr-1"></i> Mã giảm giá
+                    </a>
+                    <a class="nav-link" href="/admin/stories">
+                        <i class="far fa-newspaper text-center mr-1"></i> Tin tức
+                    </a>
+                    <a class="nav-link active" href="#">
+                        <i class="far fa-shopping-cart text-center mr-1"></i> Đơn hàng
+                    </a>
+                    <a class="nav-link" href="/admin/users">
+                        <i class="far fa-user text-center mr-1"></i> Khách hàng
+                    </a>
+                    <a class="nav-link" href="/admin/statistic">
+                        <i class="far fa-chart-bar text-center mr-1"></i> Thống kê
                     </a>
                 </div>
             </div>
-            <div class="tab-content p-4 p-md-5 col-md-9" id="v-pills-tabContent">
-                <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
-                    <h3 class="mb-4">Danh sách đơn mua</h3>
+            <div class="tab-content p-3 p-md-4 col-md-9" id="v-pills-tabContent">
+                <div class="tab-pane fade show active">
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <a
@@ -84,10 +91,10 @@
                             <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th class="col-md-4">Mã đơn</th>
+                                        <th class="col-md-3">Mã đơn</th>
                                         <th class="col-md-3 text-center">Số lượng</th>
                                         <th class="col-md-3 text-center">Tổng tiền</th>
-                                        <th class="col-md-2 text-center">Thao tác</th>
+                                        <th class="col-md-3 text-center">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -105,6 +112,14 @@
                                                     <i class="far fa-eye"></i>
                                                 </button>
                                             </a>
+                                            <button
+                                                class="btn btn-primary btn-sm ml-2"
+                                                type="button"
+                                                onclick="updateOrder('<%= order._id %>')"
+                                                title="Shipper đang giao"
+                                            >
+                                                <i class="far fa-long-arrow-alt-right"></i>
+                                            </button>
                                             <button class="btn btn-danger btn-sm ml-2" title="Yêu cầu hủy đơn">
                                                 <i class="far fa-trash"></i>
                                             </button>
@@ -118,14 +133,15 @@
                             <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th class="col-md-4">Mã đơn</th>
+                                        <th class="col-md-3">Mã đơn</th>
                                         <th class="col-md-3 text-center">Số lượng</th>
                                         <th class="col-md-3 text-center">Tổng tiền</th>
-                                        <th class="col-md-2 text-center">Thao tác</th>
+                                        <th class="col-md-3 text-center">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% orders.forEach(function(order){ %> <% if(order.status == 'Shipper đang giao') { %>
+                                    <% orders.forEach(function(order){ %> <% if(order.status == 'Shipper đang giao') {
+                                    %>
                                     <tr>
                                         <td># <%= order._id.toString().slice(16, 24) %></td>
                                         <td class="text-center"><%= order.orderItems.length %></td>
@@ -139,6 +155,14 @@
                                                     <i class="far fa-eye"></i>
                                                 </button>
                                             </a>
+                                            <button
+                                                class="btn btn-primary btn-sm ml-2"
+                                                type="button"
+                                                onclick="updateOrder('<%= order._id %>')"
+                                                title="Giao thành công"
+                                            >
+                                                <i class="far fa-long-arrow-alt-right"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                     <% } %> <% }); %>
@@ -149,10 +173,10 @@
                             <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th class="col-md-4">Mã đơn</th>
+                                        <th class="col-md-3">Mã đơn</th>
                                         <th class="col-md-3 text-center">Số lượng</th>
                                         <th class="col-md-3 text-center">Tổng tiền</th>
-                                        <th class="col-md-2 text-center">Thao tác</th>
+                                        <th class="col-md-3 text-center">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -180,10 +204,10 @@
                             <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th class="col-md-4">Mã đơn</th>
+                                        <th class="col-md-3">Mã đơn</th>
                                         <th class="col-md-3 text-center">Số lượng</th>
                                         <th class="col-md-3 text-center">Tổng tiền</th>
-                                        <th class="col-md-2 text-center">Thao tác</th>
+                                        <th class="col-md-3 text-center">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -197,10 +221,10 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="/order/detail/<%= order._id %>" title="Xem chi tiết">
+                                                <button class="btn btn-success btn-sm">
+                                                    <i class="far fa-eye"></i>
+                                                </button>
                                             </a>
-                                            <button class="btn btn-danger btn-sm ml-2" title="Yêu cầu hủy đơn">
-                                                <i class="far fa-trash"></i>
-                                            </button>
                                         </td>
                                     </tr>
                                     <% } %> <% }); %>
@@ -211,10 +235,10 @@
                             <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th class="col-md-4">Mã đơn</th>
+                                        <th class="col-md-3">Mã đơn</th>
                                         <th class="col-md-3 text-center">Số lượng</th>
                                         <th class="col-md-3 text-center">Tổng tiền</th>
-                                        <th class="col-md-2 text-center">Thao tác</th>
+                                        <th class="col-md-3 text-center">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -244,8 +268,43 @@
         </div>
     </div>
 </section>
-<% if(message != '') { %>
+<form id="delete-product" method="post"></form>
+<form action="" id="update-order" method="post"></form>
 <script>
-    sAlert.fire('Thành công!', '<%= message %>', 'success');
+    // var deleteForm = document.getElementById('delete-product');
+    var updateForm = document.getElementById('update-order');
+    const updateOrder = (id) => {
+        sAlert
+            .fire({
+                title: 'Xác nhận!',
+                text: 'Đơn hàng sẽ được cập nhật trạng thái',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Cập nhật',
+                cancelButtonText: 'Hủy',
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    updateForm.action = `/admin/orders/${id}/update?_method=PATCH`;
+                    updateForm.submit();
+                }
+            });
+    };
+    // const deleteProduct = (slug) => {
+    //     sAlert
+    //         .fire({
+    //             title: 'Bạn có chắc chắn?',
+    //             text: 'Sản phẩm sẽ được xóa khỏi hệ thống!',
+    //             icon: 'warning',
+    //             showCancelButton: true,
+    //             confirmButtonText: 'Xóa',
+    //             cancelButtonText: 'Hủy',
+    //         })
+    //         .then((result) => {
+    //             if (result.isConfirmed) {
+    //                 deleteForm.action = `/admin/product/${slug}/delete?_method=DELETE`;
+    //                 deleteForm.submit();
+    //             }
+    //         });
+    // };
 </script>
-<% } %>

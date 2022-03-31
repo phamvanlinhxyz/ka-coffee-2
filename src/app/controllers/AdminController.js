@@ -1,4 +1,5 @@
 const Product = require('../models/Product');
+const Order = require('../models/Order');
 
 // [GET] /admin/products
 const getProductPage = async (req, res) => {
@@ -83,4 +84,46 @@ const deleteProduct = async (req, res) => {
     } catch (error) {}
 };
 
-module.exports = { getProductPage, addProductPage, addProduct, editProductPage, editProduct, deleteProduct };
+// [GET] /admin/orders
+const getOrdersPage = async (req, res) => {
+    try {
+        const orders = await Order.find();
+        res.status(200).render('admin/orders', {
+            user: req.user,
+            title: 'Quản lý',
+            orders: orders,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// [PATCH] /admin/orders/:id/update
+const updateOrder = async (req, res) => {
+    const { id } = req.params;
+    const status = ['Chờ shipper', 'Shipper đang giao', 'Giao thành công'];
+    try {
+        const order = await Order.findById(id);
+        for (let i = 0; i < status.length; i++) {
+            if (status[i] == order.status && i != status.length - 1) {
+                order.status = status[i + 1];
+                break;
+            }
+        }
+        await order.save();
+        res.status(200).redirect('/admin/orders');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+module.exports = {
+    getProductPage,
+    addProductPage,
+    addProduct,
+    editProductPage,
+    editProduct,
+    deleteProduct,
+    getOrdersPage,
+    updateOrder,
+};

@@ -7,6 +7,8 @@ const {
     editProductPage,
     editProduct,
     deleteProduct,
+    getOrdersPage,
+    updateOrder,
 } = require('../app/controllers/AdminController');
 const router = express.Router();
 
@@ -22,14 +24,10 @@ var storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get('/products', getProductPage);
-router
-    .route('/product/create')
-    .get(addProductPage)
-    .post(upload.single('image'), addProduct);
-router
-    .route('/product/:slug/edit')
-    .get(editProductPage)
-    .put(upload.single('image'), editProduct);
+router.get('/orders', getOrdersPage);
+router.route('/product/create').get(addProductPage).post(upload.single('image'), addProduct);
+router.route('/product/:slug/edit').get(editProductPage).put(upload.single('image'), editProduct);
 router.delete('/product/:slug/delete', deleteProduct);
+router.patch('/orders/:id/update', updateOrder);
 
 module.exports = router;
