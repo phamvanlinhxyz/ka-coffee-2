@@ -3,7 +3,6 @@ const express = require('express');
 const path = require('path');
 const expressLayouts = require('express-ejs-layouts');
 const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
 const methodOverride = require('method-override');
 
 const app = express();
@@ -29,9 +28,6 @@ app.use(expressLayouts);
 app.set('views', path.join(__dirname, 'views'));
 app.set('layout', './layouts/main');
 app.set('view engine', 'ejs');
-
-// HTTP logger
-app.use(morgan('tiny'));
 
 // Router
 route(app);
