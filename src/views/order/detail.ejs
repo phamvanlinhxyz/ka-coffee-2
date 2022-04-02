@@ -25,7 +25,12 @@
                                 width="40"
                                 height="40"
                             />
-                            <a href="/menu/<%= item.product.slug %>" class="ka-link"> <%= item.product.name %> </a>
+                            <a href="/menu/<%= item.product.slug %>" class="ka-link">
+                                <%= item.product.name %> <% if (item.price == 0) { %> (<i
+                                    class="far fa-wine-bottle"
+                                ></i>
+                                Đổi chai) <% } %>
+                            </a>
                         </td>
                         <td class="text-center">
                             <%= item.product.price.toLocaleString('vi', { style: 'currency', currency: 'VND', }) %>
@@ -34,8 +39,9 @@
                         <td class="text-center"><%= item.amount %></td>
                         <td class="text-center"><%= item.size %></td>
                         <td class="cart-price text-center">
-                            <%= (item.amount * item.product.price).toLocaleString('vi', { style: 'currency', currency:
-                            'VND', }) %>
+                            <% if (item.price == 0) { %> <%= item.amount * 5 %> <i class="far fa-wine-bottle"></i>
+                            <% } else { %> <%= (item.amount * item.price).toLocaleString('vi', { style:'currency',
+                            currency: 'VND', }) %> <% } %>
                         </td>
                     </tr>
                     <% }) %>
@@ -59,7 +65,7 @@
                     <p>Hình thức mua: <%= order.form %></p>
                     <% if(order.form == 'Đặt online') { %>
                     <p>Phí giao hàng: <%= (20000).toLocaleString('vi', { style: 'currency', currency: 'VND', }) %></p>
-                    <% }  %>
+                    <% } %>
                     <p>Trạng thái đơn: <%= order.status %></p>
                 </div>
             </div>

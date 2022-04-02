@@ -98,25 +98,6 @@ const getOrdersPage = async (req, res) => {
     }
 };
 
-// [PATCH] /admin/orders/:id/update
-const updateOrder = async (req, res) => {
-    const { id } = req.params;
-    const status = ['Chờ shipper', 'Shipper đang giao', 'Giao thành công'];
-    try {
-        const order = await Order.findById(id);
-        for (let i = 0; i < status.length; i++) {
-            if (status[i] == order.status && i != status.length - 1) {
-                order.status = status[i + 1];
-                break;
-            }
-        }
-        await order.save();
-        res.status(200).redirect('/admin/orders');
-    } catch (error) {
-        console.log(error);
-    }
-};
-
 module.exports = {
     getProductPage,
     addProductPage,
@@ -125,5 +106,4 @@ module.exports = {
     editProduct,
     deleteProduct,
     getOrdersPage,
-    updateOrder,
 };

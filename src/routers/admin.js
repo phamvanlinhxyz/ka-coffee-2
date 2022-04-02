@@ -8,8 +8,8 @@ const {
     editProduct,
     deleteProduct,
     getOrdersPage,
-    updateOrder,
 } = require('../app/controllers/AdminController');
+const { updateOrder } = require('../app/controllers/OrderController');
 const router = express.Router();
 
 var storage = multer.diskStorage({

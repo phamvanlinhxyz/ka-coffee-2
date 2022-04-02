@@ -48,6 +48,39 @@
                 </div>
                 <div class="mt-4">
                     <h5>Đặt mua</h5>
+                    <% if(user && user.role == 'admin') { %>
+                    <form class="add-form" action="/cart/add" method="post">
+                        <div class="row">
+                            <div class="col-6">
+                                <label>Số lượng</label>
+                                <input name="amount" type="number" class="form-control" value="1" min="1" />
+                            </div>
+                            <div class="col-3">
+                                <label>Kích cỡ</label>
+                                <select class="form-control" name="size">
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="hidden" name="product" value="<%= product.slug %>" />
+                        <button type="submit" class="btn btn-primary mt-4">
+                            <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                        </button>
+                        <button type="button" class="btn btn-primary mt-4 ml-3 change-bottle">
+                            <i class="far fa-wine-bottle"></i> Đổi chai
+                        </button>
+                    </form>
+                    <script>
+                        var btn = document.querySelector('.change-bottle');
+                        var form = document.querySelector('.add-form');
+                        btn.addEventListener('click', () => {
+                            form.action = '/cart/change-bottle';
+                            form.submit();
+                        });
+                    </script>
+                    <% } else { %>
                     <form class="add-form" action="/cart/add" method="post">
                         <div class="row">
                             <div class="col-6">
@@ -68,6 +101,7 @@
                             <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
                         </button>
                     </form>
+                    <% } %>
                 </div>
             </div>
         </div>

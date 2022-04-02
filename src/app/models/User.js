@@ -15,7 +15,7 @@ const user = new mongoose.Schema(
         email: { type: String, required: true },
         role: { type: String, required: true },
         discount: [{ type: mongoose.Types.ObjectId, ref: 'Discount', required: false }],
-        notification: [{ type: String, required: false, default: '' }],
+        notification: [{ type: Object, required: false, default: '' }],
         avatar: { type: String },
     },
     {

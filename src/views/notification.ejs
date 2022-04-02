@@ -1,0 +1,43 @@
+<section class="section-50">
+    <div class="container">
+        <h3 class="m-b-50 heading-line">Thông báo <i class="fa fa-bell text-muted"></i></h3>
+        <div class="notification-ui_dd-content">
+            <% notification.forEach(e => { %> <% if ((new Date() - new Date(e.time)) < 24 * 60 * 60 * 1000) { %>
+            <div class="notification-list notification-list--unread">
+                <div class="notification-list_content">
+                    <div class="notification-list_img">
+                        <img src="/images/avt.jpg" alt="user" />
+                    </div>
+                    <div class="notification-list_detail">
+                        <p><b><%= user.name %></b></p>
+                        <p class="text-muted"><%= e.message %></p>
+                        <p class="text-muted"><small><%= e.time.toLocaleString('vi-VN') %></small></p>
+                    </div>
+                </div>
+                <div class="notification-list_feature-img">
+                    <img src="<%= e.image %>" alt="Product image" />
+                </div>
+            </div>
+            <% } else { %>
+            <div class="notification-list">
+                <div class="notification-list_content">
+                    <div class="notification-list_img">
+                        <img src="/images/avt.jpg" alt="user" />
+                    </div>
+                    <div class="notification-list_detail">
+                        <p><b><%= user.name %></b></p>
+                        <p class="text-muted"><%= e.message %></p>
+                        <p class="text-muted"><small><%= e.time.toLocaleString('vi-VN') %></small></p>
+                    </div>
+                </div>
+                <div class="notification-list_feature-img">
+                    <img src="<%= e.image %>" alt="Product image" />
+                </div>
+            </div>
+            <% } %> <% }) %>
+        </div>
+        <div class="text-center">
+            <a href="#!" class="dark-link">Load more activity</a>
+        </div>
+    </div>
+</section>

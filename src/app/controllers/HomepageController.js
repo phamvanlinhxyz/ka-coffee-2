@@ -38,6 +38,15 @@ const getStories = async (req, res) => {
     });
 };
 
+// [GET] /notification
+const getNotification = async (req, res) => {
+    res.status(200).render('notification', {
+        user: req.user,
+        title: 'Thông báo',
+        notification: req.user.notification.reverse(),
+    });
+};
+
 const getSingleProduct = async (req, res) => {
     const slug = req.params.slug;
     const random1 = Math.random();
@@ -71,4 +80,5 @@ module.exports = {
     getDiscounts,
     getStories,
     getSingleProduct,
+    getNotification,
 };

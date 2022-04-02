@@ -64,14 +64,6 @@
                                 aria-selected="false"
                                 >Mua tại quán</a
                             >
-                            <a
-                                class="nav-item nav-link"
-                                data-toggle="tab"
-                                href="#da-huy"
-                                role="tab"
-                                aria-selected="false"
-                                >Đã hủy</a
-                            >
                         </div>
                     </nav>
                     <div class="tab-content" id="nav-tabContent">
@@ -105,9 +97,6 @@
                                                     <i class="far fa-eye"></i>
                                                 </button>
                                             </a>
-                                            <button class="btn btn-danger btn-sm ml-2" title="Yêu cầu hủy đơn">
-                                                <i class="far fa-trash"></i>
-                                            </button>
                                         </td>
                                     </tr>
                                     <% } %> <% }); %>
@@ -125,7 +114,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% orders.forEach(function(order){ %> <% if(order.status == 'Shipper đang giao') { %>
+                                    <% orders.forEach(function(order){ %> <% if(order.status == 'Shipper đang giao') {
+                                    %>
                                     <tr>
                                         <td># <%= order._id.toString().slice(16, 24) %></td>
                                         <td class="text-center"><%= order.orderItems.length %></td>
@@ -197,41 +187,10 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="/order/detail/<%= order._id %>" title="Xem chi tiết">
-                                            </a>
-                                            <button class="btn btn-danger btn-sm ml-2" title="Yêu cầu hủy đơn">
-                                                <i class="far fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <% } %> <% }); %>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane fade" id="da-huy" role="tabpanel">
-                            <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th class="col-md-4">Mã đơn</th>
-                                        <th class="col-md-3 text-center">Số lượng</th>
-                                        <th class="col-md-3 text-center">Tổng tiền</th>
-                                        <th class="col-md-2 text-center">Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% orders.forEach(function(order){ %> <% if(order.status == 'Đã hủy') { %>
-                                    <tr>
-                                        <td># <%= order._id.toString().slice(16, 24) %></td>
-                                        <td class="text-center"><%= order.orderItems.length %></td>
-                                        <td class="text-center cart-price">
-                                            <%= order.total.toLocaleString("vi", { style: "currency", currency: "VND" })
-                                            %>
-                                        </td>
-                                        <td class="text-center">
-                                            <!-- <a href="/order/detail/<%= order._id %>" title="Xem chi tiết">
                                                 <button class="btn btn-success btn-sm">
                                                     <i class="far fa-eye"></i>
                                                 </button>
-                                            </a> -->
+                                            </a>
                                         </td>
                                     </tr>
                                     <% } %> <% }); %>

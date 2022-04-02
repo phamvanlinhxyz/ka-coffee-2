@@ -16,6 +16,7 @@ const route = (app) => {
     app.use('*', attachUser, (req, res) => {
         res.render('404', {
             user: req.user ? req.user : 0,
+            title: '404'
         });
     });
 };
