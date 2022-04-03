@@ -269,8 +269,3 @@ AOS.init({
     });
     $('#book_time').timepicker();
 })(jQuery);
-
-// // Set cart
-// const orders = JSON.parse(localStorage.getItem('orders'));
-// var cartIcon = document.querySelector('.cart-icon');
-// cartIcon.dataset.text = orders ? orders.length : 0;

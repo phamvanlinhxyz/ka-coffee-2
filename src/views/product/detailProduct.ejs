@@ -183,6 +183,7 @@
             }
             cart.subtotal += parseInt('<%= product.price %>' * amount);
             localStorage.setItem('cart', JSON.stringify(cart));
+            location.href = '/cart/guest';
         }
     });
 </script>
