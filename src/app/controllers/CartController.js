@@ -200,4 +200,19 @@ const checkEmail = async (req, res) => {
     }
 };
 
-module.exports = { addToCart, getCart, deleteSingleItem, changeBottle, checkEmail };
+// [GET] /cart/guest
+const getCartGuest = async (req, res) => {
+    res.status(200).render('cart/guestCart', {
+        title: 'Giỏ hàng',
+        user: req.user,
+    });
+};
+
+module.exports = {
+    addToCart,
+    getCart,
+    deleteSingleItem,
+    changeBottle,
+    checkEmail,
+    getCartGuest,
+};
