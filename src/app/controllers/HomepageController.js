@@ -1,4 +1,6 @@
 const Product = require('../models/Product');
+const Story = require('../models/Story');
+const User = require('../models/User');
 
 // [GET] /
 const getHomepage = async (req, res) => {
@@ -90,6 +92,25 @@ const getSingleProduct = async (req, res) => {
     }
 };
 
+// [GET] /stories/:slug
+const getSingleStory = async (req, res) => {
+    try {
+        const story = await Story.findOne({ slug: req.params.slug }).populate({
+            path: 'user',
+            model: User,
+            select: 'name',
+        });
+        res.status(200).render('story/detailStory', {
+            user: req.user,
+            title: story.title,
+            story: story,
+        });
+        // res.json(story);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
     getHomepage,
     getMenu,
@@ -97,4 +118,5 @@ module.exports = {
     getStories,
     getSingleProduct,
     getNotification,
+    getSingleStory,
 };

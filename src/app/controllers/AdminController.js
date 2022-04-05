@@ -118,6 +118,7 @@ const getStoriesPage = async (req, res) => {
             page: page + 1,
             pages: pages,
         });
+        // res.json(stories);
     } catch (error) {
         console.log(error);
     }
@@ -134,17 +135,20 @@ const addStoryPage = (req, res) => {
 // [POST] /admin/story/create
 const addStory = async (req, res) => {
     const story = new Story(req.body);
-    story.category = req.body.category.toString().split(', ');
+    story.categories = req.body.categories
+        .toString()
+        .split(',')
+        .map((category) => {
+            return category.trim();
+        });
     story.thumbnail = '/uploads/story/' + req.file.filename;
-    res.json(story);
-    // try {
-    //     const product = new Product(req.body);
-    //     product.image = '/uploads/product/' + req.file.filename;
-    //     await product.save();
-    //     res.status(200).redirect('/admin/products');
-    // } catch (error) {
-    //     console.log(error);
-    // }
+    story.user = req.user._id;
+    try {
+        await story.save();
+        res.status(200).redirect('/admin/stories');
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 module.exports = {
