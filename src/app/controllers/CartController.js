@@ -1,4 +1,5 @@
 const Cart = require('../models/Cart');
+const Order = require('../models/Order');
 const Product = require('../models/Product');
 const User = require('../models/User');
 
@@ -40,7 +41,7 @@ const getCart = async (req, res) => {
 const addToCart = async (req, res) => {
     try {
         if (!req.user) {
-            return res.json(req.body);
+            return res.status(200).redirect('/auth/login');
         }
         var cart = await Cart.findOne({ user: req.user });
         const product = await Product.findOne({ slug: req.body.product });
@@ -81,6 +82,41 @@ const addToCart = async (req, res) => {
             await cart.save();
         }
         res.status(200).redirect('/cart');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// [POST] /cart/guest
+const createCartGuest = async (req, res) => {
+    try {
+        const product = await Product.findOne({ name: req.body.product });
+        if (!product) {
+            return res.redirect('/');
+        }
+        const orderItems = {
+            product: product._id,
+            amount: req.body.amount,
+            size: req.body.size,
+            price: product.price,
+        };
+        const order = new Order({
+            orderItems,
+            name: req.body.name,
+            address: req.body.address,
+            phone: req.body.phone,
+            status: 'Chờ xác nhận',
+            subtotal: product.price * req.body.amount,
+            total: product.price * req.body.amount + 20000,
+            form: 'Đặt online',
+        });
+        await order.save();
+        res.status(200).render('order/guest', {
+            product: product,
+            order: order,
+            user: req.user,
+            title: 'Đặt hàng',
+        });
     } catch (error) {
         console.log(error);
     }
@@ -200,19 +236,11 @@ const checkEmail = async (req, res) => {
     }
 };
 
-// [GET] /cart/guest
-const getCartGuest = async (req, res) => {
-    res.status(200).render('cart/guestCart', {
-        title: 'Giỏ hàng',
-        user: req.user,
-    });
-};
-
 module.exports = {
     addToCart,
     getCart,
     deleteSingleItem,
     changeBottle,
     checkEmail,
-    getCartGuest,
+    createCartGuest,
 };

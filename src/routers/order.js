@@ -1,9 +1,16 @@
 const express = require('express');
-const { createUserOrder, detailOrder, createOrderByAdmin } = require('../app/controllers/OrderController');
+const {
+    createUserOrder,
+    detailOrder,
+    createOrderByAdmin,
+    createOrderByGuest,
+} = require('../app/controllers/OrderController');
+const { authorizePermission } = require('../app/middleware/AuthMiddleware');
 const router = express.Router();
 
 router.get('/detail/:id', detailOrder);
-router.post('/create', createUserOrder);
-router.post('/create/admin', createOrderByAdmin);
+router.post('/create', authorizePermission('user'), createUserOrder);
+router.post('/create/admin', authorizePermission('admin'), createOrderByAdmin);
+router.post('/create/guest', createOrderByGuest);
 
 module.exports = router;

@@ -9,7 +9,7 @@ const {
     deleteProduct,
     getOrdersPage,
 } = require('../app/controllers/AdminController');
-const { updateOrder } = require('../app/controllers/OrderController');
+const { updateOrder, deleteOrder, getEditOrderPage, editOrder } = require('../app/controllers/OrderController');
 const router = express.Router();
 
 var storage = multer.diskStorage({
@@ -29,5 +29,7 @@ router.route('/product/create').get(addProductPage).post(upload.single('image'),
 router.route('/product/:slug/edit').get(editProductPage).put(upload.single('image'), editProduct);
 router.delete('/product/:slug/delete', deleteProduct);
 router.patch('/orders/:id/update', updateOrder);
+router.delete('/orders/:id/delete', deleteOrder);
+router.route('/orders/:id/edit').get(getEditOrderPage).post(editOrder);
 
 module.exports = router;

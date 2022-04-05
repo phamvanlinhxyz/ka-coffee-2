@@ -11,7 +11,7 @@ const route = (app) => {
     app.use('/me', authenticateUser, meRouter);
     app.use('/admin', authenticateUser, authorizePermission('admin'), adminRouter);
     app.use('/cart', attachUser, cartRouter);
-    app.use('/order', authenticateUser, orderRouter);
+    app.use('/order', attachUser, orderRouter);
     app.use('/', attachUser, homeRouter);
     app.use('*', attachUser, (req, res) => {
         res.render('404', {

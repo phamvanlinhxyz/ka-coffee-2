@@ -71,6 +71,14 @@
                                 aria-selected="false"
                                 >Mua tại quán</a
                             >
+                            <a
+                                class="nav-item nav-link"
+                                data-toggle="tab"
+                                href="#cho-xac-nhan"
+                                role="tab"
+                                aria-selected="false"
+                                >Chờ xác nhận</a
+                            >
                         </div>
                     </nav>
                     <div class="tab-content" id="nav-tabContent">
@@ -220,16 +228,63 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="tab-pane fade" id="cho-xac-nhan" role="tabpanel">
+                            <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-3">Mã đơn</th>
+                                        <th class="col-md-2 text-center">Số điện thoại</th>
+                                        <th class="col-md-2 text-center">Số lượng</th>
+                                        <th class="col-md-2 text-center">Tổng tiền</th>
+                                        <th class="col-md-3 text-center">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% orders.forEach(function(order){ %> <% if(order.status == 'Chờ xác nhận') { %>
+                                    <tr>
+                                        <td># <%= order._id.toString().slice(16, 24) %></td>
+                                        <td class="text-center"><%= order.phone %></td>
+                                        <td class="text-center"><%= order.orderItems.length %></td>
+                                        <td class="text-center cart-price">
+                                            <%= order.total.toLocaleString("vi", { style: "currency", currency: "VND" })
+                                            %>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="/order/detail/<%= order._id %>" title="Xem chi tiết">
+                                                <button class="btn btn-success btn-sm">
+                                                    <i class="far fa-eye"></i>
+                                                </button>
+                                            </a>
+                                            <a href="/admin/orders/<%= order._id %>/edit" title="Sửa thông tin">
+                                                <button class="btn btn-primary btn-sm ml-2">
+                                                    <i class="far fa-pen"></i>
+                                                </button>
+                                            </a>
+                                            <button
+                                                class="btn btn-danger btn-sm ml-2"
+                                                type="button"
+                                                title="Xóa đơn hàng"
+                                                onclick="deleteOrder('<%= order._id %>')"
+                                            >
+                                                <i class="far fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <% } %> <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<form id="delete-product" method="post"></form>
-<form action="" id="update-order" method="post"></form>
+<form id="delete-order" method="post"></form>
+<form id="update-order" method="post"></form>
 <script>
     var updateForm = document.getElementById('update-order');
+    var deleteForm = document.getElementById('delete-order');
     const updateOrder = (id) => {
         sAlert
             .fire({
@@ -244,6 +299,23 @@
                 if (result.isConfirmed) {
                     updateForm.action = `/admin/orders/${id}/update?_method=PATCH`;
                     updateForm.submit();
+                }
+            });
+    };
+    const deleteOrder = (id) => {
+        sAlert
+            .fire({
+                title: 'Xác nhận!',
+                text: 'Đơn hàng sẽ được xóa khỏi hệ thống',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy',
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    deleteForm.action = `/admin/orders/${id}/delete?_method=DELETE`;
+                    deleteForm.submit();
                 }
             });
     };

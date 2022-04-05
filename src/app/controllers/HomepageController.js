@@ -2,9 +2,25 @@ const Product = require('../models/Product');
 
 // [GET] /
 const getHomepage = async (req, res) => {
+    const newProduct = await Product.find().sort({ _id: -1 }).limit(3);
+    const allProduct = [
+        ...(await Product.find({ category: 'Cà phê' }).sort({ _id: -1 }).limit(3)),
+        ...(await Product.find({ category: 'Trà sữa' }).sort({ _id: -1 }).limit(3)),
+        ...(await Product.find({ category: 'Trà trái cây' }).sort({ _id: -1 }).limit(3)),
+        ...(await Product.find({ category: 'Đá xay' }).sort({ _id: -1 }).limit(3)),
+        ...(await Product.find({ category: 'Matcha' }).sort({ _id: -1 }).limit(3)),
+        ...(await Product.find({ category: 'Đồ uống sẵn' }).sort({ _id: -1 }).limit(3)),
+    ];
+    // res.json(newProduct);
     res.render('homepage', {
         layout: 'layouts/home-layout',
         user: req.user,
+        newProduct,
+        allProduct,
+        notification: {
+            status: '',
+            message: '',
+        },
     });
 };
 

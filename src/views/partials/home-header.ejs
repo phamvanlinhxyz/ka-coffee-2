@@ -48,8 +48,9 @@
                 <% } %>
                 <li class="nav-item">
                     <a
-                        href="<%= user ? '/cart' : '/cart/guest' %>"
+                        href="<%= user ? '/cart' : '#order' %>"
                         class="nav-link cart-icon"
+                        title="<%= user ? 'Giỏ hàng' : 'Đặt hàng không đăng nhập' %>"
                         data-text="<%= user ? user.cart : '0' %>"
                     >
                         <i class="fas fa-shopping-cart"></i>

@@ -21,7 +21,7 @@ const Order = new mongoose.Schema(
         status: {
             type: String,
             required: true,
-            enum: ['Chờ shipper', 'Shipper đang giao', 'Giao thành công', 'Đã thanh toán'],
+            enum: ['Chờ shipper', 'Shipper đang giao', 'Giao thành công', 'Đã thanh toán', 'Chờ xác nhận'],
             default: 'Chờ shipper',
         },
         subtotal: { type: Number, default: 0 },
@@ -30,6 +30,10 @@ const Order = new mongoose.Schema(
             type: String,
             required: true,
             enum: ['Mua tại quán', 'Đặt online'],
+        },
+        note: {
+            type: String,
+            required: false,
         },
     },
     {

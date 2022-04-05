@@ -1,3 +1,4 @@
+const req = require('express/lib/request');
 const Cart = require('../models/Cart');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
@@ -36,6 +37,9 @@ const createUserOrder = async (req, res) => {
         const cart = await Cart.findOne({
             user: req.user._id,
         });
+        if (!cart) {
+            return res.redirect('/me/orders');
+        }
         const order = new Order({
             orderItems: cart.orderItems,
             user: req.user._id,
@@ -74,6 +78,9 @@ const createOrderByAdmin = async (req, res) => {
                 select: 'image',
             },
         });
+        if (!cart) {
+            return res.redirect('/admin/orders');
+        }
         var order = new Order({
             orderItems: cart.orderItems,
             name: req.body.name,
@@ -106,6 +113,48 @@ const createOrderByAdmin = async (req, res) => {
     }
 };
 
+// [POST] /order/create/guest
+const createOrderByGuest = async (req, res) => {
+    try {
+        const { confirm, order } = req.body;
+        const newProduct = await Product.find().sort({ _id: -1 }).limit(3);
+        const allProduct = [
+            ...(await Product.find({ category: 'Cà phê' }).sort({ _id: -1 }).limit(3)),
+            ...(await Product.find({ category: 'Trà sữa' }).sort({ _id: -1 }).limit(3)),
+            ...(await Product.find({ category: 'Trà trái cây' }).sort({ _id: -1 }).limit(3)),
+            ...(await Product.find({ category: 'Đá xay' }).sort({ _id: -1 }).limit(3)),
+            ...(await Product.find({ category: 'Matcha' }).sort({ _id: -1 }).limit(3)),
+            ...(await Product.find({ category: 'Đồ uống sẵn' }).sort({ _id: -1 }).limit(3)),
+        ];
+        if (confirm == 'false') {
+            const orderDB = await Order.findById(order);
+            await orderDB.remove();
+            return res.render('homepage', {
+                layout: 'layouts/home-layout',
+                user: req.user,
+                newProduct,
+                allProduct,
+                notification: {
+                    status: 'success',
+                    message: 'Đã hủy đặt hàng',
+                },
+            });
+        }
+        res.render('homepage', {
+            layout: 'layouts/home-layout',
+            user: req.user,
+            newProduct,
+            allProduct,
+            notification: {
+                status: 'success',
+                message: 'Đặt hàng thành công',
+            },
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 // [GET] /order/detail/:id
 const detailOrder = async (req, res) => {
     try {
@@ -127,7 +176,7 @@ const detailOrder = async (req, res) => {
         }
         res.status(404).render('404', {
             user: req.user,
-            title: 404,
+            title: '404',
         });
     } catch (error) {
         console.log(error);
@@ -147,7 +196,6 @@ const updateOrder = async (req, res) => {
                 select: 'image',
             },
         });
-        var customer = await User.findById(order.user);
         for (let i = 0; i < status.length; i++) {
             if (status[i] == order.status && i != status.length - 1) {
                 order.status = status[i + 1];
@@ -155,25 +203,92 @@ const updateOrder = async (req, res) => {
             }
         }
         await order.save();
-        if (order.status == 'Giao thành công') {
-            customer = evaluateScore(customer, order.subtotal);
+
+        var customer = await User.findById(order.user);
+        if (customer) {
+            if (order.status == 'Giao thành công') {
+                customer = evaluateScore(customer, order.subtotal);
+            }
+            customer.notification = [
+                ...customer.notification,
+                {
+                    message:
+                        order.status == 'Shipper đang giao'
+                            ? `Đơn hàng #${order._id.toString().slice(16, 24)} của bạn đang được giao`
+                            : `Đơn hàng #${order._id.toString().slice(16, 24)} của bạn đã giao thành công`,
+                    time: new Date(),
+                    image: order.orderItems[0].product.image,
+                },
+            ];
+            await customer.save();
         }
-        customer.notification = [
-            ...customer.notification,
-            {
-                message:
-                    order.status == 'Shipper đang giao'
-                        ? `Đơn hàng #${order._id.toString().slice(16, 24)} của bạn đang được giao`
-                        : `Đơn hàng #${order._id.toString().slice(16, 24)} của bạn đã giao thành công`,
-                time: new Date(),
-                image: order.orderItems[0].product.image,
-            },
-        ];
-        await customer.save();
+
         res.status(200).redirect('/admin/orders');
     } catch (error) {
         console.log(error);
     }
 };
 
-module.exports = { createUserOrder, detailOrder, createOrderByAdmin, updateOrder };
+// [DELETE] /admin/orders/:id/delete
+const deleteOrder = async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    try {
+        const order = await Order.findById(id);
+        console.log(order);
+        await order.remove();
+        res.status(200).redirect('/admin/orders');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// [GET] /admin/orders/:id/edit
+const getEditOrderPage = async (req, res) => {
+    try {
+        const order = await Order.findOne({ _id: req.params.id, status: 'Chờ xác nhận' }).populate({
+            path: 'orderItems',
+            populate: {
+                path: 'product',
+                model: Product,
+                select: 'image name price slug',
+            },
+        });
+        if (!order) {
+            return res.status(404).render('404', {
+                user: req.user,
+                title: 404,
+            });
+        }
+        res.status(200).render('order/edit', {
+            user: req.user,
+            title: 'Chỉnh sửa đơn hàng',
+            order: order,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// [POST] /admin/orders/:id/edit
+const editOrder = async (req, res) => {
+    const update = ({ name, phone, address, note } = req.body);
+    update.status = 'Chờ shipper';
+    try {
+        const order = await Order.findByIdAndUpdate(req.params.id, update, { new: true });
+        res.status(200).redirect('/admin/orders');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+module.exports = {
+    createUserOrder,
+    detailOrder,
+    createOrderByAdmin,
+    updateOrder,
+    createOrderByGuest,
+    deleteOrder,
+    getEditOrderPage,
+    editOrder,
+};

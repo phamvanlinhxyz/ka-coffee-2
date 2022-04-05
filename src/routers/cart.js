@@ -5,16 +5,16 @@ const {
     deleteSingleItem,
     changeBottle,
     checkEmail,
-    getCartGuest,
+    createCartGuest,
 } = require('../app/controllers/CartController');
-const { authorizePermission } = require('../app/middleware/AuthMiddleware');
+const { authorizePermission, authenticateUser } = require('../app/middleware/AuthMiddleware');
 const router = express.Router();
 
 router.post('/add', addToCart);
 router.post('/delete/:id', deleteSingleItem);
-router.post('/change-bottle', changeBottle);
-router.post('/check-email', checkEmail);
-router.get('/guest', getCartGuest);
-router.get('/', getCart);
+router.post('/change-bottle', authorizePermission('admin'), changeBottle);
+router.post('/check-email', authorizePermission('admin'), checkEmail);
+router.post('/guest', createCartGuest);
+router.get('/', authenticateUser, getCart);
 
 module.exports = router;
