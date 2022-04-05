@@ -8,11 +8,14 @@ const {
     editProduct,
     deleteProduct,
     getOrdersPage,
+    getStoriesPage,
+    addStoryPage,
+    addStory,
 } = require('../app/controllers/AdminController');
 const { updateOrder, deleteOrder, getEditOrderPage, editOrder } = require('../app/controllers/OrderController');
 const router = express.Router();
 
-var storage = multer.diskStorage({
+var productStorage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './src/public/uploads/product');
     },
@@ -21,15 +24,32 @@ var storage = multer.diskStorage({
     },
 });
 
-const upload = multer({ storage: storage });
+var storyStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './src/public/uploads/story');
+    },
+    filename: function (req, file, cb) {
+        cb(null, 'story-' + Date.now() + '.jpg');
+    },
+});
 
+const uploadProI = multer({ storage: productStorage });
+const uploadStrI = multer({ storage: storyStorage });
+
+// admin/product
 router.get('/products', getProductPage);
-router.get('/orders', getOrdersPage);
-router.route('/product/create').get(addProductPage).post(upload.single('image'), addProduct);
-router.route('/product/:slug/edit').get(editProductPage).put(upload.single('image'), editProduct);
+router.route('/product/create').get(addProductPage).post(uploadProI.single('image'), addProduct);
+router.route('/product/:slug/edit').get(editProductPage).put(uploadProI.single('image'), editProduct);
 router.delete('/product/:slug/delete', deleteProduct);
+
+// admin/orders
+router.get('/orders', getOrdersPage);
 router.patch('/orders/:id/update', updateOrder);
 router.delete('/orders/:id/delete', deleteOrder);
 router.route('/orders/:id/edit').get(getEditOrderPage).post(editOrder);
+
+// admin/stories
+router.get('/stories', getStoriesPage);
+router.route('/story/create').get(addStoryPage).post(uploadStrI.single('thumbnail'), addStory);
 
 module.exports = router;

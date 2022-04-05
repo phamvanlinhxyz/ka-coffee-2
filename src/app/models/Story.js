@@ -5,9 +5,10 @@ mongoose.plugin(slug);
 
 const Story = new mongoose.Schema(
     {
-        description: { type: String, minLength: 100 },
-        title: { type: String, maxLength: 20 },
-        image: { type: String, required: true },
+        title: { type: String, required: true },
+        description: { type: String, required: true },
+        thumbnail: { type: String, required: true },
+        category: [{ type: String, required: false }],
         user: {
             ref: 'User',
             type: mongoose.Types.ObjectId,

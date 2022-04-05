@@ -1,5 +1,6 @@
 const Product = require('../models/Product');
 const Order = require('../models/Order');
+const Story = require('../models/Story');
 
 // [GET] /admin/products
 const getProductPage = async (req, res) => {
@@ -87,7 +88,7 @@ const deleteProduct = async (req, res) => {
 // [GET] /admin/orders
 const getOrdersPage = async (req, res) => {
     try {
-        const orders = await Order.find();
+        const orders = await Order.find().sort({ _id: -1 });
         res.status(200).render('admin/orders', {
             user: req.user,
             title: 'Quản lý',
@@ -98,6 +99,54 @@ const getOrdersPage = async (req, res) => {
     }
 };
 
+// [GET] /admin/stories
+const getStoriesPage = async (req, res) => {
+    const page = parseInt(req.query.page ? req.query.page : 1) - 1;
+    const perPage = 10;
+    try {
+        const totalStory = await Story.count();
+        const stories = await Story.find()
+            .sort({ _id: -1 })
+            .limit(perPage)
+            .skip(perPage * page);
+
+        const pages = Math.ceil(totalStory / perPage);
+        res.status(200).render('admin/stories', {
+            user: req.user,
+            title: 'Quản lý',
+            stories,
+            page: page + 1,
+            pages: pages,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// [GET] /admin/story/create
+const addStoryPage = (req, res) => {
+    res.status(200).render('story/addStory', {
+        user: req.user,
+        title: 'Thêm tin tức',
+    });
+};
+
+// [POST] /admin/story/create
+const addStory = async (req, res) => {
+    const story = new Story(req.body);
+    story.category = req.body.category.toString().split(', ');
+    story.thumbnail = '/uploads/story/' + req.file.filename;
+    res.json(story);
+    // try {
+    //     const product = new Product(req.body);
+    //     product.image = '/uploads/product/' + req.file.filename;
+    //     await product.save();
+    //     res.status(200).redirect('/admin/products');
+    // } catch (error) {
+    //     console.log(error);
+    // }
+};
+
 module.exports = {
     getProductPage,
     addProductPage,
@@ -106,4 +155,7 @@ module.exports = {
     editProduct,
     deleteProduct,
     getOrdersPage,
+    getStoriesPage,
+    addStoryPage,
+    addStory,
 };
