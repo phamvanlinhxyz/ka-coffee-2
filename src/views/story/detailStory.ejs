@@ -51,65 +51,83 @@
                 </div>
 
                 <div class="pt-3 mt-4">
-                    <h3 class="mb-4 h4 font-weight-bold p-2 bg-light">0 Bình luận</h3>
+                    <h3 class="mb-4 h4 font-weight-bold p-2 bg-light"><%= story.comment %> Bình luận</h3>
                     <ul class="comment-list">
                         <% comments.forEach(e => { %>
-                            <li class="comment">
-                                <div class="vcard bio">
-                                    <img src="/images/avt.jpg" alt="Image placeholder" />
+                        <li class="comment">
+                            <div class="vcard bio">
+                                <img src="/images/avt.jpg" alt="Image placeholder" />
+                            </div>
+                            <div class="comment-body">
+                                <h3><%= e.user.name %></h3>
+                                <div class="meta mb-2">
+                                    <%= e.createdAt.toLocaleString('en-US', { day: 'numeric' , month: 'short' , year:
+                                    'numeric', hour: 'numeric', minute: 'numeric'}); %>
                                 </div>
-                                <div class="comment-body">
-                                    <h3><%= e.user.name %></h3>
-                                    <% if (e.createdAt) { %>
+                                <p><%= e.content %></p>
+                                <% if (user) { %>
+                                <p>
+                                    <a href="#comment-area">
+                                        <button
+                                            class="btn btn-dark btn-sm"
+                                            onclick="reply('<%= e.user.name %>', '<%= e._id %>')"
+                                        >
+                                            <i class="far fa-reply"></i> Trả lời
+                                        </button>
+                                    </a>
+                                </p>
+                                <% } %>
+                            </div>
+
+                            <ul class="children">
+                                <% e.reply.forEach(c => { %>
+                                <li class="comment">
+                                    <div class="vcard bio">
+                                        <img src="/images/avt.jpg" alt="Image placeholder" />
+                                    </div>
+                                    <div class="comment-body">
+                                        <h3><%= c.user.name %></h3>
                                         <div class="meta mb-2">
-                                            <%= e.createdAt.toLocaleString('en-US', { day: 'numeric' , month: 'short' ,
-                                                year: 'numeric', hour: 'numeric', minute: 'numeric'}); %>
+                                            <%= c.createdAt.toLocaleString('en-US', { day: 'numeric' , month: 'short' ,
+                                            year: 'numeric', hour: 'numeric', minute: 'numeric'}); %>
                                         </div>
-                                    <% } %>
-                                    <p>
-                                        <%= e.content %>
-                                    </p>
-                                    <p><a href="#" class="reply">Reply</a></p>
-                                </div>
-                            
-                                <!-- <ul class="children">
-                                    <li class="comment">
-                                        <div class="vcard bio">
-                                            <img src="/images/person_1.jpg" alt="Image placeholder" />
-                                        </div>
-                                        <div class="comment-body">
-                                            <h3>John Doe</h3>
-                                            <div class="meta mb-2">January 03, 2019 at 2:21pm</div>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                                Pariatur quidem
-                                                laborum necessitatibus, ipsam impedit vitae autem, eum
-                                                officia, fugiat saepe
-                                                enim sapiente iste iure! Quam voluptas earum impedit
-                                                necessitatibus, nihil?
-                                            </p>
-                                            <p><a href="#" class="reply">Reply</a></p>
-                                        </div>
-                                    </li>
-                                </ul> -->
-                            </li>
+                                        <p><%= c.content %></p>
+                                    </div>
+                                </li>
+                                <% }) %>
+                            </ul>
+                        </li>
                         <% }) %>
                     </ul>
                     <!-- END comment-list -->
                     <% if (user) { %>
-                        <div class="comment-form-wrap pt-5">
-                            <h3 class="mb-5 h4 font-weight-bold p-2 bg-light">Bình luận</h3>
-                            <form action="/comment" method="post" class="p-2 bg-light">
-                                <input type="hidden" name="commentedAt" value="<%= story._id %>">
-                                <div class="form-group">
-                                    <textarea name="content"  cols="30" rows="6"
-                                        class="form-control" placeholder="Nhập bình luận của bạn tại đây" required ></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <button class="btn btn-primary">Bình luận</button>
-                                </div>
-                            </form>
-                        </div>
+                    <div id="comment-area" class="comment-form-wrap pt-5">
+                        <h3 class="mb-5 h4 font-weight-bold p-2 bg-light">Bình luận</h3>
+                        <form id="comment-form" action="/comment" method="post" class="p-2 bg-light">
+                            <input type="hidden" name="commentedAt" value="<%= story._id %>" />
+                            <label id="comment-label">Bình luận</label>
+                            <div class="form-group">
+                                <textarea
+                                    name="content"
+                                    cols="30"
+                                    rows="6"
+                                    class="form-control"
+                                    placeholder="Nhập bình luận của bạn tại đây"
+                                    required
+                                ></textarea>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-primary mr-3">Bình luận</button>
+                                <button
+                                    type="button"
+                                    class="new-cmt-btn btn btn-secondary d-none"
+                                    onclick="newCmt('<%= story._id %>')"
+                                >
+                                    Viết bình luận mới
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                     <% } %>
                 </div>
             </div>
@@ -120,20 +138,21 @@
                     <h3>Tin tức phổ biến</h3>
                     <% popularStory.forEach(e => { %>
                     <div class="block-21 mb-4 d-flex">
-                        <a href="/stories/<%= e.slug %>" class="blog-img mr-4" style="background-image: url('<%= e.thumbnail %>')"></a>
+                        <a
+                            href="/stories/<%= e.slug %>"
+                            class="blog-img mr-4"
+                            style="background-image: url('<%= e.thumbnail %>')"
+                        ></a>
                         <div class="text">
                             <h3 class="heading">
                                 <a href="/stories/<%= e.slug %>"><%= e.title %></a>
                             </h3>
                             <div class="meta">
                                 <div>
-                                    <span class="icon-calendar"></span> <%=
-                                    e.createdAt.toLocaleDateString('en-US', { day: 'numeric', month: 'short',
-                                    year: 'numeric' }); %>
+                                    <span class="icon-calendar"></span> <%= e.createdAt.toLocaleDateString('en-US', {
+                                    day: 'numeric', month: 'short', year: 'numeric' }); %>
                                 </div>
-                                <div>
-                                    <span class="icon-person"></span> <%= e.user.name %>
-                                </div>
+                                <div><span class="icon-person"></span> <%= e.user.name %></div>
                             </div>
                         </div>
                     </div>
@@ -178,3 +197,25 @@
         </div>
     </div>
 </section>
+<% if (user) { %>
+<script>
+    var cmtLabel = document.getElementById('comment-label');
+    var cmtForm = document.getElementById('comment-form');
+    var commentedAt = document.querySelector('input[name="commentedAt"]');
+    var newCmtBtn = document.querySelector('.new-cmt-btn');
+
+    const reply = (name, id) => {
+        cmtForm.action = '/comment/reply';
+        commentedAt.value = id;
+        cmtLabel.innerHTML = `Trả lời bình luận của <b>${name}</b>`;
+        newCmtBtn.classList.remove('d-none');
+    };
+
+    const newCmt = (id) => {
+        cmtForm.action = '/comment';
+        commentedAt.value = id;
+        cmtLabel.innerHTML = 'Bình luận';
+        newCmtBtn.classList.add('d-none');
+    };
+</script>
+<% } %>

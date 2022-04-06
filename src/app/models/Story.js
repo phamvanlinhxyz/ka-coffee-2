@@ -16,6 +16,7 @@ const Story = new mongoose.Schema(
         },
         slug: { type: String, slug: 'title', unique: true },
         view: { type: Number, required: true },
+        comment: { type: Number, required: true },
     },
     { timestamps: true }
 );

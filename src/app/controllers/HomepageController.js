@@ -139,11 +139,20 @@ const getSingleStory = async (req, res) => {
             select: 'name',
         });
 
-        const comments = await Comment.find({ commentedAt: story._id }).populate({
-            path: 'user',
-            model: User,
-            select: 'name',
-        });
+        const comments = await Comment.find({ commentedAt: story._id })
+            .populate({
+                path: 'user',
+                model: User,
+                select: 'name',
+            })
+            .populate({
+                path: 'reply',
+                populate: {
+                    path: 'user',
+                    model: User,
+                    select: 'name',
+                },
+            });
 
         res.status(200).render('story/detailStory', {
             user: req.user,
