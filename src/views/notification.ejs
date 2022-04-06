@@ -6,7 +6,7 @@
             <div class="notification-list notification-list--unread">
                 <div class="notification-list_content">
                     <div class="notification-list_img">
-                        <img src="/images/avt.jpg" alt="user" />
+                        <img src="<%= user.avatar ? user.avatar : '/images/avt.jpg' %>" alt="user" />
                     </div>
                     <div class="notification-list_detail">
                         <p><b><%= user.name %></b></p>
@@ -22,7 +22,7 @@
             <div class="notification-list">
                 <div class="notification-list_content">
                     <div class="notification-list_img">
-                        <img src="/images/avt.jpg" alt="user" />
+                        <img src="<%= user.avatar ? user.avatar : '/images/avt.jpg' %>" alt="user" />
                     </div>
                     <div class="notification-list_detail">
                         <p><b><%= user.name %></b></p>
@@ -35,9 +35,6 @@
                 </div>
             </div>
             <% } %> <% }) %>
-        </div>
-        <div class="text-center">
-            <a href="#!" class="dark-link">Load more activity</a>
         </div>
     </div>
 </section>
