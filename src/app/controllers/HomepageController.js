@@ -1,6 +1,7 @@
 const Comment = require('../models/Comment');
 const Product = require('../models/Product');
 const Story = require('../models/Story');
+const Tag = require('../models/Tag');
 const User = require('../models/User');
 
 // [GET] /
@@ -120,7 +121,7 @@ const getSingleStory = async (req, res) => {
         const story = await Story.findOne({ slug: req.params.slug }).populate({
             path: 'user',
             model: User,
-            select: 'name',
+            select: 'name avatar',
         });
 
         if (!story) {
@@ -133,26 +134,28 @@ const getSingleStory = async (req, res) => {
         story.view++;
         await story.save();
 
-        const popularStory = await Story.find().sort({ view: -1 }).limit(3).populate({
+        const popularStory = await Story.find().sort({ view: -1 }).limit(5).populate({
             path: 'user',
             model: User,
-            select: 'name',
+            select: 'name avatar',
         });
 
         const comments = await Comment.find({ commentedAt: story._id })
             .populate({
                 path: 'user',
                 model: User,
-                select: 'name',
+                select: 'name avatar',
             })
             .populate({
                 path: 'reply',
                 populate: {
                     path: 'user',
                     model: User,
-                    select: 'name',
+                    select: 'name avatar',
                 },
             });
+
+        const tags = await Tag.findOne();
 
         res.status(200).render('story/detailStory', {
             user: req.user,
@@ -160,8 +163,8 @@ const getSingleStory = async (req, res) => {
             story,
             popularStory,
             comments,
+            tags,
         });
-        // res.json(comments);
     } catch (error) {
         console.log(error);
     }

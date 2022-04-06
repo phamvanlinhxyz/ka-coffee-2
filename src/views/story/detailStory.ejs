@@ -26,7 +26,7 @@
                 <div class="mb-3 d-flex align-items-center">
                     <div class="mr-4 d-flex">
                         <img
-                            src="/images/avt.jpg"
+                            src="<%= story.user.avatar ? story.user.avatar : '/images/avt.jpg' %>"
                             alt="Image placeholder"
                             height="32"
                             width="32"
@@ -56,7 +56,7 @@
                         <% comments.forEach(e => { %>
                         <li class="comment">
                             <div class="vcard bio">
-                                <img src="/images/avt.jpg" alt="Image placeholder" />
+                                <img src="<%= e.user.avatar ? e.user.avatar : '/images/avt.jpg' %>" alt="Image placeholder" />
                             </div>
                             <div class="comment-body">
                                 <h3><%= e.user.name %></h3>
@@ -83,7 +83,7 @@
                                 <% e.reply.forEach(c => { %>
                                 <li class="comment">
                                     <div class="vcard bio">
-                                        <img src="/images/avt.jpg" alt="Image placeholder" />
+                                        <img src="<%= c.user.avatar ? c.user.avatar : '/images/avt.jpg' %>" alt="Image placeholder" />
                                     </div>
                                     <div class="comment-body">
                                         <h3><%= c.user.name %></h3>
@@ -117,7 +117,7 @@
                                 ></textarea>
                             </div>
                             <div class="form-group">
-                                <button class="btn btn-primary mr-3">Bình luận</button>
+                                <button class="btn btn-primary mr-3"><i class="far fa-comment-alt-lines"></i> Bình luận</button>
                                 <button
                                     type="button"
                                     class="new-cmt-btn btn btn-secondary d-none"
@@ -159,39 +159,14 @@
                     <% }) %>
                 </div>
 
-                <!-- <div class="sidebar-box ftco-animate">
-                    <h3>Tag Cloud</h3>
+                <div class="sidebar-box ftco-animate">
+                    <h3>Danh sách danh mục</h3>
                     <ul class="tagcloud m-0 p-0">
-                        <a href="#" class="tag-cloud-link">Dish</a>
-                        <a href="#" class="tag-cloud-link">Food</a>
-                        <a href="#" class="tag-cloud-link">Lunch</a>
-                        <a href="#" class="tag-cloud-link">Menu</a>
-                        <a href="#" class="tag-cloud-link">Dessert</a>
-                        <a href="#" class="tag-cloud-link">Drinks</a>
-                        <a href="#" class="tag-cloud-link">Sweets</a>
+                        <% tags.tags.forEach(e => { %>
+                            <a href="/stories/tag/<%= e %>" class="tag-cloud-link"><%= e %></a>
+                        <% }) %>
                     </ul>
                 </div>
-
-                <div class="sidebar-box ftco-animate">
-                    <h3>Archives</h3>
-                    <ul class="categories">
-                        <li>
-                            <a href="#">January 2019 <span>(20)</span></a>
-                        </li>
-                        <li>
-                            <a href="#">December 2018 <span>(30)</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Novemmber 2018 <span>(20)</span></a>
-                        </li>
-                        <li>
-                            <a href="#">September 2018 <span>(6)</span></a>
-                        </li>
-                        <li>
-                            <a href="#">August 2018 <span>(8)</span></a>
-                        </li>
-                    </ul>
-                </div> -->
             </div>
             <!-- END COL -->
         </div>

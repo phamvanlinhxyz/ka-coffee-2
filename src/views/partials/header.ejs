@@ -27,7 +27,7 @@
                 <% } else { %>
                 <li class="nav-item" style="position: relative">
                     <div class="nav-link nav-item-user">
-                        <img src="/images/avt.jpg" alt="" class="nav-item-user-img mr-1 mb-1" />
+                        <img src="<%= user.avatar ? user.avatar : '/images/avt.jpg' %>" alt="" class="nav-item-user-img mr-1 mb-1" />
                         <span class="nav-item-user-name"><%= user.name %></span>
                         <ul class="nav-item-user-menu">
                             <% if( user.role == "admin" ) { %>

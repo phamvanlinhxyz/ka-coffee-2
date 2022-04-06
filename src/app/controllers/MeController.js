@@ -2,6 +2,7 @@ const createUserToken = require('../../utils/createUserToken');
 const { attachTokenToRes } = require('../../utils/jwt');
 const Order = require('../models/Order');
 const User = require('../models/User');
+const Cart = require('../models/Cart');
 
 // [GET] /me/account
 const getAccountPage = (req, res) => {
@@ -48,10 +49,13 @@ const getListDiscountPage = (req, res) => {
 
 const updateAccount = async (req, res) => {
     try {
-        const { name, email, phone, address } = req.body;
-        const user = await User.findByIdAndUpdate(req.user._id, { name, email, phone, address }, { new: true }).select(
-            '-password'
-        );
+        const updateForm = ({ name, email, phone, address } = req.body);
+        if (req.file) {
+            updateForm['avatar'] = '/uploads/avatar/' + req.file.filename;
+        }
+        const user = await User.findByIdAndUpdate(req.user._id, updateForm, { new: true }).select('-password');
+        const cart = await Cart.findOne({ user: user._id });
+        user.cart = cart ? cart.orderItems.length : 0;
         const userToken = createUserToken(user);
         attachTokenToRes({ res, user: userToken });
 
@@ -85,7 +89,7 @@ const updatePassword = async (req, res) => {
         res.status(200).render('me/password', {
             success: true,
             message: 'Cập nhật mật khẩu thành công!',
-            user: user,
+            user: req.user,
             title: req.user.name,
         });
     } catch (error) {

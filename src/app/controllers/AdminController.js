@@ -2,6 +2,7 @@ const Product = require('../models/Product');
 const Order = require('../models/Order');
 const Story = require('../models/Story');
 const User = require('../models/User');
+const Tag = require('../models/Tag');
 
 // [GET] /admin/products
 const getProductPage = async (req, res) => {
@@ -153,7 +154,22 @@ const addStory = async (req, res) => {
     story.thumbnail = '/uploads/story/' + req.file.filename;
     story.user = req.user._id;
     story.view = 0;
+    story.comment = 0;
     try {
+        var tagsDB = await Tag.findOne({});
+        if (!tagsDB) {
+            tagsDB = await Tag.create({
+                tagsDB: story.categories,
+            });
+        } else {
+            story.categories.forEach((e) => {
+                if (!tagsDB.tags.includes(e)) {
+                    tagsDB.tags = [...tagsDB.tags, e];
+                }
+            });
+            await tagsDB.save();
+        }
+
         await story.save();
         res.status(200).redirect('/admin/stories');
     } catch (error) {
@@ -190,6 +206,21 @@ const editStory = async (req, res) => {
             .filter((category) => {
                 return category != '';
             });
+
+        var tagsDB = await Tag.findOne({});
+        if (!tagsDB) {
+            tagsDB = await Tag.create({
+                tagsDB: updateForm.categories,
+            });
+        } else {
+            updateForm.categories.forEach((e) => {
+                if (!tagsDB.tags.includes(e)) {
+                    tagsDB.tags = [...tagsDB.tags, e];
+                }
+            });
+            await tagsDB.save();
+        }
+
         if (req.file) {
             updateForm['thumbnail'] = '/uploads/story/' + req.file.filename;
         }
