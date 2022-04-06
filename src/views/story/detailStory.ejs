@@ -37,7 +37,7 @@
                         </div>
                     </div>
 
-                    <span class="icon-calendar mr-1"></span> <%= story.createdAt.toLocaleDateString(undefined, { day:
+                    <span class="icon-calendar mr-1"></span> <%= story.createdAt.toLocaleDateString('en-US', { day:
                     'numeric', month: 'short', year: 'numeric' }); %>
                 </div>
                 <img src="<%= story.thumbnail %>" alt="" class="img-fluid" />
@@ -53,86 +53,74 @@
                 <div class="pt-3 mt-4">
                     <h3 class="mb-4 h4 font-weight-bold p-2 bg-light">0 Bình luận</h3>
                     <ul class="comment-list">
-                        <li class="comment">
-                            <div class="vcard bio">
-                                <img src="/images/person_1.jpg" alt="Image placeholder" />
-                            </div>
-                            <div class="comment-body">
-                                <h3>John Doe</h3>
-                                <div class="meta mb-2">January 03, 2019 at 2:21pm</div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum
-                                    necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente
-                                    iste iure! Quam voluptas earum impedit necessitatibus, nihil?
-                                </p>
-                                <p><a href="#" class="reply">Reply</a></p>
-                            </div>
-                        </li>
-
-                        <li class="comment">
-                            <div class="vcard bio">
-                                <img src="/images/person_1.jpg" alt="Image placeholder" />
-                            </div>
-                            <div class="comment-body">
-                                <h3>John Doe</h3>
-                                <div class="meta mb-2">January 03, 2019 at 2:21pm</div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum
-                                    necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente
-                                    iste iure! Quam voluptas earum impedit necessitatibus, nihil?
-                                </p>
-                                <p><a href="#" class="reply">Reply</a></p>
-                            </div>
-
-                            <ul class="children">
-                                <li class="comment">
-                                    <div class="vcard bio">
-                                        <img src="/images/person_1.jpg" alt="Image placeholder" />
-                                    </div>
-                                    <div class="comment-body">
-                                        <h3>John Doe</h3>
-                                        <div class="meta mb-2">January 03, 2019 at 2:21pm</div>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem
-                                            laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe
-                                            enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?
-                                        </p>
-                                        <p><a href="#" class="reply">Reply</a></p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
+                        <% comments.forEach(e => { %>
+                            <li class="comment">
+                                <div class="vcard bio">
+                                    <img src="/images/avt.jpg" alt="Image placeholder" />
+                                </div>
+                                <div class="comment-body">
+                                    <h3><%= e.user.name %></h3>
+                                    <% if (e.createdAt) { %>
+                                        <div class="meta mb-2">
+                                            <%= e.createdAt.toLocaleString('en-US', { day: 'numeric' , month: 'short' ,
+                                                year: 'numeric', hour: 'numeric', minute: 'numeric'}); %>
+                                        </div>
+                                    <% } %>
+                                    <p>
+                                        <%= e.content %>
+                                    </p>
+                                    <p><a href="#" class="reply">Reply</a></p>
+                                </div>
+                            
+                                <!-- <ul class="children">
+                                    <li class="comment">
+                                        <div class="vcard bio">
+                                            <img src="/images/person_1.jpg" alt="Image placeholder" />
+                                        </div>
+                                        <div class="comment-body">
+                                            <h3>John Doe</h3>
+                                            <div class="meta mb-2">January 03, 2019 at 2:21pm</div>
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                                                Pariatur quidem
+                                                laborum necessitatibus, ipsam impedit vitae autem, eum
+                                                officia, fugiat saepe
+                                                enim sapiente iste iure! Quam voluptas earum impedit
+                                                necessitatibus, nihil?
+                                            </p>
+                                            <p><a href="#" class="reply">Reply</a></p>
+                                        </div>
+                                    </li>
+                                </ul> -->
+                            </li>
+                        <% }) %>
                     </ul>
                     <!-- END comment-list -->
-
-                    <div class="comment-form-wrap pt-5">
-                        <h3 class="mb-5 h4 font-weight-bold p-2 bg-light">Bình luận</h3>
-                        <form action="#" class="p-2 bg-light">
-                            <div class="form-group">
-                                <label for="comment">Bình luận</label>
-                                <textarea
-                                    name="comment"
-                                    id="comment"
-                                    cols="30"
-                                    rows="6"
-                                    class="form-control"
-                                ></textarea>
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" value="Post Comment" class="btn btn-primary" />
-                            </div>
-                        </form>
-                    </div>
+                    <% if (user) { %>
+                        <div class="comment-form-wrap pt-5">
+                            <h3 class="mb-5 h4 font-weight-bold p-2 bg-light">Bình luận</h3>
+                            <form action="/comment" method="post" class="p-2 bg-light">
+                                <input type="hidden" name="commentedAt" value="<%= story._id %>">
+                                <div class="form-group">
+                                    <textarea name="content"  cols="30" rows="6"
+                                        class="form-control" placeholder="Nhập bình luận của bạn tại đây" required ></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary">Bình luận</button>
+                                </div>
+                            </form>
+                        </div>
+                    <% } %>
                 </div>
             </div>
             <!-- .col-md-8 -->
 
             <div class="col-lg-4 sidebar ftco-animate">
                 <div class="sidebar-box ftco-animate">
-                    <h3>Bài viết phổ biến</h3>
+                    <h3>Tin tức phổ biến</h3>
                     <% popularStory.forEach(e => { %>
                     <div class="block-21 mb-4 d-flex">
-                        <a class="blog-img mr-4" style="background-image: url('<%= e.thumbnail %>')"></a>
+                        <a href="/stories/<%= e.slug %>" class="blog-img mr-4" style="background-image: url('<%= e.thumbnail %>')"></a>
                         <div class="text">
                             <h3 class="heading">
                                 <a href="/stories/<%= e.slug %>"><%= e.title %></a>
@@ -140,7 +128,7 @@
                             <div class="meta">
                                 <div>
                                     <span class="icon-calendar"></span> <%=
-                                    e.createdAt.toLocaleDateString(undefined, { day: 'numeric', month: 'short',
+                                    e.createdAt.toLocaleDateString('en-US', { day: 'numeric', month: 'short',
                                     year: 'numeric' }); %>
                                 </div>
                                 <div>

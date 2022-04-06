@@ -1,3 +1,4 @@
+const Comment = require('../models/Comment');
 const Product = require('../models/Product');
 const Story = require('../models/Story');
 const User = require('../models/User');
@@ -121,10 +122,24 @@ const getSingleStory = async (req, res) => {
             model: User,
             select: 'name',
         });
+
+        if (!story) {
+            return res.status(404).render('404', {
+                user: req.user,
+                title: '404',
+            });
+        }
+
         story.view++;
         await story.save();
 
         const popularStory = await Story.find().sort({ view: -1 }).limit(3).populate({
+            path: 'user',
+            model: User,
+            select: 'name',
+        });
+
+        const comments = await Comment.find({ commentedAt: story._id }).populate({
             path: 'user',
             model: User,
             select: 'name',
@@ -135,8 +150,39 @@ const getSingleStory = async (req, res) => {
             title: story.title,
             story,
             popularStory,
+            comments,
         });
-        // res.json(popularStory);
+        // res.json(comments);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// [GET] /stories/tag/:tag
+const getStoriesByTag = async (req, res) => {
+    const { tag } = req.params;
+    const page = parseInt(req.query.page ? req.query.page : 1) - 1;
+    const perPage = 6;
+    try {
+        const totalStory = await Story.count({ categories: tag });
+        const stories = await Story.find({ categories: tag })
+            .sort({ _id: -1 })
+            .limit(perPage)
+            .skip(perPage * page)
+            .populate({
+                path: 'user',
+                model: User,
+                select: 'name',
+            });
+
+        const pages = Math.ceil(totalStory / perPage);
+        res.status(200).render('stories', {
+            user: req.user,
+            title: 'Tin tức',
+            stories,
+            page: page + 1,
+            pages: pages,
+        });
     } catch (error) {
         console.log(error);
     }
@@ -150,4 +196,5 @@ module.exports = {
     getSingleProduct,
     getNotification,
     getSingleStory,
+    getStoriesByTag,
 };
