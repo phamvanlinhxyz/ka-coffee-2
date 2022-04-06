@@ -14,7 +14,8 @@ const Story = new mongoose.Schema(
             type: mongoose.Types.ObjectId,
             required: true,
         },
-        slug: { type: 'string', slug: 'title', unique: true },
+        slug: { type: String, slug: 'title', unique: true },
+        view: { type: Number, required: true },
     },
     { timestamps: true }
 );

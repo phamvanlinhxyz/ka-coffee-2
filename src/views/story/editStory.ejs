@@ -1,0 +1,94 @@
+<section class="py-4 my-4">
+    <div class="container">
+        <div class="row justify-content-center pb-2">
+            <div class="col-md-7 text-center heading-section ftco-animate">
+                <span class="subheading">Quản lý</span>
+                <h2 class="mb-4">Chỉnh sửa tin tức</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <!-- Form add products -->
+                <form
+                    id="edit-story-form"
+                    action="/admin/story/<%= story.slug %>/edit?_method=PUT"
+                    method="post"
+                    enctype="multipart/form-data"
+                >
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>Tiêu đề</label>
+                            <input
+                                name="title"
+                                type="text"
+                                class="form-control"
+                                value="<%= story.title %>"
+                                placeholder="Tiêu đề tin tức"
+                            />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Danh mục</label>
+                            <input
+                                type="text"
+                                name="categories"
+                                class="form-control"
+                                value="<%= story.categories %>"
+                                placeholder="Danh mục tin tức"
+                            />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Nội dung tin tức</label>
+                            <textarea class="form-control" name="description" rows="8" placeholder="Nội dung tin tức">
+<%= story.description %>
+                        </textarea
+                            >
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Ảnh thumbnail</label>
+                            <input name="thumbnail" type="file" class="form-control-file" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <button class="btn btn-primary">Cập nhật tin tức</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <label>Ảnh mô tả</label>
+                <img class="image-preview rounded mb-4" src="<%= story.thumbnail %>" width="100%" />
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var fileInput = document.querySelector('input[name="thumbnail"]');
+    var imgPreview = document.querySelector('.image-preview');
+    fileInput.addEventListener('change', () => {
+        URL.revokeObjectURL(imgPreview.src);
+        const file = fileInput.files[0];
+        file.preview = URL.createObjectURL(file);
+        imgPreview.src = file.preview;
+    });
+
+    var form = document.querySelector('#edit-story-form');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        sAlert
+            .fire({
+                title: 'Bạn có chắc chắn?',
+                text: 'Những thay đổi về tin tức sẽ được cập nhật!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Cập nhật',
+                cancelButtonText: 'Hủy',
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    sAlert.fire('Thành công!', 'Tin tức đã được cập nhật!', 'success').then(() => {
+                        form.submit();
+                    });
+                }
+            });
+    });
+</script>

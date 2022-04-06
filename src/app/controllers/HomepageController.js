@@ -50,10 +50,31 @@ const getDiscounts = async (req, res) => {
 
 // [GET] /stories
 const getStories = async (req, res) => {
-    res.render('stories', {
-        user: req.user,
-        title: 'Tin tức',
-    });
+    const page = parseInt(req.query.page ? req.query.page : 1) - 1;
+    const perPage = 6;
+    try {
+        const totalStory = await Story.count();
+        const stories = await Story.find()
+            .sort({ _id: -1 })
+            .limit(perPage)
+            .skip(perPage * page)
+            .populate({
+                path: 'user',
+                model: User,
+                select: 'name',
+            });
+
+        const pages = Math.ceil(totalStory / perPage);
+        res.status(200).render('stories', {
+            user: req.user,
+            title: 'Tin tức',
+            stories,
+            page: page + 1,
+            pages: pages,
+        });
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 // [GET] /notification
@@ -100,12 +121,22 @@ const getSingleStory = async (req, res) => {
             model: User,
             select: 'name',
         });
+        story.view++;
+        await story.save();
+
+        const popularStory = await Story.find().sort({ view: -1 }).limit(3).populate({
+            path: 'user',
+            model: User,
+            select: 'name',
+        });
+
         res.status(200).render('story/detailStory', {
             user: req.user,
             title: story.title,
-            story: story,
+            story,
+            popularStory,
         });
-        // res.json(story);
+        // res.json(popularStory);
     } catch (error) {
         console.log(error);
     }

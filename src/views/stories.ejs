@@ -22,135 +22,71 @@
 <section class="ftco-section bg-light">
     <div class="container">
         <div class="row">
+            <% stories.forEach(e => { %>
             <div class="col-md-4 ftco-animate">
                 <div class="blog-entry">
-                    <a href="blog-single.html" class="block-20" style="background-image: url('images/image_1.jpg')">
+                    <a href="/stories/<%= e.slug %>" class="block-20" style="background-image: url('<%= e.thumbnail %>')">
                     </a>
                     <div class="text px-4 pt-3 pb-4">
                         <div class="meta">
-                            <div><a href="#">Feb 4, 2019</a></div>
-                            <div><a href="#">Admin</a></div>
+                            <div>
+                                <%= e.createdAt.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year:
+                                'numeric' }); %>
+                            </div>
+                            <div><%= e.user.name %></div>
                         </div>
                         <h3 class="heading">
-                            <a href="#">Even the all-powerful Pointing has no control about the blind texts</a>
+                            <a href="/stories/<%= e.slug %>"><%= e.title %></a>
                         </h3>
                         <p class="clearfix">
-                            <a href="#" class="float-left read">Read more</a>
+                            <a href="/stories/<%= e.slug %>" class="float-left read">Read more</a>
                             <a href="#" class="float-right meta-chat"><span class="icon-chat"></span> 3</a>
                         </p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 ftco-animate">
-                <div class="blog-entry">
-                    <a href="blog-single.html" class="block-20" style="background-image: url('images/image_2.jpg')">
-                    </a>
-                    <div class="text px-4 pt-3 pb-4">
-                        <div class="meta">
-                            <div><a href="#">Feb 4, 2019</a></div>
-                            <div><a href="#">Admin</a></div>
-                        </div>
-                        <h3 class="heading">
-                            <a href="#">Even the all-powerful Pointing has no control about the blind texts</a>
-                        </h3>
-                        <p class="clearfix">
-                            <a href="#" class="float-left read">Read more</a>
-                            <a href="#" class="float-right meta-chat"><span class="icon-chat"></span> 3</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ftco-animate">
-                <div class="blog-entry">
-                    <a href="blog-single.html" class="block-20" style="background-image: url('images/image_3.jpg')">
-                    </a>
-                    <div class="text px-4 pt-3 pb-4">
-                        <div class="meta">
-                            <div><a href="#">Feb 4, 2019</a></div>
-                            <div><a href="#">Admin</a></div>
-                        </div>
-                        <h3 class="heading">
-                            <a href="#">Even the all-powerful Pointing has no control about the blind texts</a>
-                        </h3>
-                        <p class="clearfix">
-                            <a href="#" class="float-left read">Read more</a>
-                            <a href="#" class="float-right meta-chat"><span class="icon-chat"></span> 3</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ftco-animate">
-                <div class="blog-entry">
-                    <a href="blog-single.html" class="block-20" style="background-image: url('images/image_4.jpg')">
-                    </a>
-                    <div class="text px-4 pt-3 pb-4">
-                        <div class="meta">
-                            <div><a href="#">Feb 4, 2019</a></div>
-                            <div><a href="#">Admin</a></div>
-                        </div>
-                        <h3 class="heading">
-                            <a href="#">Even the all-powerful Pointing has no control about the blind texts</a>
-                        </h3>
-                        <p class="clearfix">
-                            <a href="#" class="float-left read">Read more</a>
-                            <a href="#" class="float-right meta-chat"><span class="icon-chat"></span> 3</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ftco-animate">
-                <div class="blog-entry">
-                    <a href="blog-single.html" class="block-20" style="background-image: url('images/image_5.jpg')">
-                    </a>
-                    <div class="text px-4 pt-3 pb-4">
-                        <div class="meta">
-                            <div><a href="#">Feb 4, 2019</a></div>
-                            <div><a href="#">Admin</a></div>
-                        </div>
-                        <h3 class="heading">
-                            <a href="#">Even the all-powerful Pointing has no control about the blind texts</a>
-                        </h3>
-                        <p class="clearfix">
-                            <a href="#" class="float-left read">Read more</a>
-                            <a href="#" class="float-right meta-chat"><span class="icon-chat"></span> 3</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ftco-animate">
-                <div class="blog-entry">
-                    <a href="blog-single.html" class="block-20" style="background-image: url('images/image_6.jpg')">
-                    </a>
-                    <div class="text px-4 pt-3 pb-4">
-                        <div class="meta">
-                            <div><a href="#">Feb 4, 2019</a></div>
-                            <div><a href="#">Admin</a></div>
-                        </div>
-                        <h3 class="heading">
-                            <a href="#">Even the all-powerful Pointing has no control about the blind texts</a>
-                        </h3>
-                        <p class="clearfix">
-                            <a href="#" class="float-left read">Read more</a>
-                            <a href="#" class="float-right meta-chat"><span class="icon-chat"></span> 3</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <% }) %>
         </div>
         <div class="row no-gutters my-5">
-            <div class="col text-center">
+            <% if (pages > 1) { %>
+            <div class="col text-center mb-3">
                 <div class="block-27">
                     <ul>
-                        <li><a href="#">&lt;</a></li>
-                        <li class="active"><span>1</span></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li><a href="#">&gt;</a></li>
+                        <li>
+                            <% if (page > 1) { %>
+                            <a href="/admin/stories?page=<%= page - 1 %>">
+                                <i class="far fa-angle-left"></i>
+                            </a>
+                            <% } else { %>
+                            <a href="#">
+                                <i class="far fa-angle-left"></i>
+                            </a>
+                            <% } %>
+                        </li>
+                        <% for(var i = 1; i <= pages; i++) { %> <% if (page == i) { %>
+                        <li class="active">
+                            <a href="/admin/stories?page=<%= i %>"> <%= i %> </a>
+                        </li>
+                        <% } else { %>
+                        <li>
+                            <a href="/admin/stories?page=<%= i %>"> <%= i %> </a>
+                        </li>
+                        <% } %> <% } %>
+                        <li>
+                            <% if (page < pages) { %>
+                            <a href="/admin/stories?page=<%= page + 1 %>">
+                                <i class="far fa-angle-right"></i>
+                            </a>
+                            <% } else { %>
+                            <a href="#">
+                                <i class="far fa-angle-right"></i>
+                            </a>
+                            <% } %>
+                        </li>
                     </ul>
                 </div>
             </div>
+            <% } %>
         </div>
     </div>
 </section>

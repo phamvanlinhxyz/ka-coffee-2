@@ -1,6 +1,7 @@
 const Product = require('../models/Product');
 const Order = require('../models/Order');
 const Story = require('../models/Story');
+const User = require('../models/User');
 
 // [GET] /admin/products
 const getProductPage = async (req, res) => {
@@ -108,7 +109,12 @@ const getStoriesPage = async (req, res) => {
         const stories = await Story.find()
             .sort({ _id: -1 })
             .limit(perPage)
-            .skip(perPage * page);
+            .skip(perPage * page)
+            .populate({
+                path: 'user',
+                model: User,
+                select: 'name',
+            });
 
         const pages = Math.ceil(totalStory / perPage);
         res.status(200).render('admin/stories', {
@@ -140,11 +146,54 @@ const addStory = async (req, res) => {
         .split(',')
         .map((category) => {
             return category.trim();
+        })
+        .filter((category) => {
+            return category != '';
         });
     story.thumbnail = '/uploads/story/' + req.file.filename;
     story.user = req.user._id;
+    story.view = 0;
     try {
         await story.save();
+        res.status(200).redirect('/admin/stories');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// [GET] /admin/story/:slug/edit
+const editStoryPage = async (req, res) => {
+    try {
+        const slug = req.params.slug;
+        const story = await Story.findOne({ slug });
+        res.status(200).render('story/editStory', {
+            user: req.user,
+            title: 'Chỉnh sửa tin tức',
+            story,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// [PUT] /admin/story/:slug/edit
+const editStory = async (req, res) => {
+    try {
+        const slug = req.params.slug;
+        var updateForm = req.body;
+        updateForm.categories = req.body.categories
+            .toString()
+            .split(',')
+            .map((category) => {
+                return category.trim();
+            })
+            .filter((category) => {
+                return category != '';
+            });
+        if (req.file) {
+            updateForm['thumbnail'] = '/uploads/story/' + req.file.filename;
+        }
+        const story = await Story.findOneAndUpdate({ slug }, updateForm, { new: true });
         res.status(200).redirect('/admin/stories');
     } catch (error) {
         console.log(error);
@@ -162,4 +211,6 @@ module.exports = {
     getStoriesPage,
     addStoryPage,
     addStory,
+    editStoryPage,
+    editStory,
 };
