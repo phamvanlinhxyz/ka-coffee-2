@@ -269,6 +269,21 @@ const deleteStory = async (req, res) => {
     }
 };
 
+// [GET] /admin/users
+const getUsersPage = async (req, res) => {
+    try {
+        const users = await User.find().select('-password').sort({ score: -1 });
+        res.status(200).render('admin/users', {
+            user: req.user,
+            users,
+            title: 'Quản lý',
+        });
+        // res.json(users)
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
     getProductPage,
     addProductPage,
@@ -283,4 +298,5 @@ module.exports = {
     editStoryPage,
     editStory,
     deleteStory,
+    getUsersPage,
 };

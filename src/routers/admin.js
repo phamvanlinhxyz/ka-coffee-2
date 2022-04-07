@@ -14,6 +14,7 @@ const {
     editStoryPage,
     editStory,
     deleteStory,
+    getUsersPage,
 } = require('../app/controllers/AdminController');
 const { updateOrder, deleteOrder, getEditOrderPage, editOrder } = require('../app/controllers/OrderController');
 const router = express.Router();
@@ -56,5 +57,8 @@ router.get('/stories', getStoriesPage);
 router.route('/story/create').get(addStoryPage).post(uploadStrI.single('thumbnail'), addStory);
 router.route('/story/:slug/edit').get(editStoryPage).put(uploadStrI.single('thumbnail'), editStory);
 router.delete('/story/:slug/delete', deleteStory);
+
+// admin/users
+router.get('/users', getUsersPage)
 
 module.exports = router;

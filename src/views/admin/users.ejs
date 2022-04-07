@@ -1,0 +1,248 @@
+<section class="py-4 my-4">
+    <div class="container">
+        <div class="bg-white shadow rounded-lg d-block d-sm-flex rounded">
+            <div class="profile-tab-nav border-right responsive-account-header col-md-3 my-3">
+                <div class="p-4">
+                    <div class="img-circle text-center mb-3">
+                        <img
+                            src="/images/avt.jpg"
+                            alt="Image"
+                            width="180"
+                            height="180"
+                            class="rounded-circle img-thumbnail"
+                        />
+                        <h3>Admin</h3>
+                    </div>
+                </div>
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link" href="/admin/products">
+                        <i class="far fa-coffee text-center mr-1"></i> Sản phẩm
+                    </a>
+                    <a class="nav-link" href="/admin/discounts">
+                        <i class="far fa-percent text-center mr-1"></i> Mã giảm giá
+                    </a>
+                    <a class="nav-link" href="/admin/stories">
+                        <i class="far fa-newspaper text-center mr-1"></i> Tin tức
+                    </a>
+                    <a class="nav-link" href="/admin/orders">
+                        <i class="far fa-shopping-cart text-center mr-1"></i>
+                        Đơn hàng
+                    </a>
+                    <a class="nav-link active" href="/admin/users">
+                        <i class="far fa-user text-center mr-1"></i> Khách hàng
+                    </a>
+                    <a class="nav-link" href="/admin/statistic">
+                        <i class="far fa-chart-bar text-center mr-1"></i> Thống kê
+                    </a>
+                </div>
+            </div>
+            <div class="tab-content p-3 p-md-4 col-md-9" id="v-pills-tabContent">
+                <div class="tab-pane fade show active">
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a
+                                class="nav-item nav-link active"
+                                data-toggle="tab"
+                                href="#thuong"
+                                role="tab"
+                                aria-selected="true"
+                                >Khách hàng thường</a
+                            >
+                            <a class="nav-item nav-link" data-toggle="tab" href="#bac" role="tab" aria-selected="false"
+                                >Khách hàng bạc</a
+                            >
+                            <a class="nav-item nav-link" data-toggle="tab" href="#vang" role="tab" aria-selected="false"
+                                >Khách hàng vàng</a
+                            >
+                            <a
+                                class="nav-item nav-link"
+                                data-toggle="tab"
+                                href="#kim-cuong"
+                                role="tab"
+                                aria-selected="false"
+                                >Khách hàng kim cương</a
+                            >
+                            <% if (user.role == 'super admin') { %>
+                            <a
+                                class="nav-item nav-link"
+                                data-toggle="tab"
+                                href="#admin"
+                                role="tab"
+                                aria-selected="false"
+                                >Admin</a
+                            >
+                            <% } %>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div
+                            class="tab-pane fade show active"
+                            id="thuong"
+                            role="tabpanel"
+                            aria-labelledby="nav-home-tab"
+                        >
+                            <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-3">Tên khách hàng</th>
+                                        <th class="col-md-3 text-center">Số điện thoại</th>
+                                        <th class="col-md-3 text-center">Điểm</th>
+                                        <% if (user.role=='super admin') { %>
+                                        <th class="col-md-3 text-center">Thao tác</th>
+                                        <% } %>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% users.forEach(e => { %> <% if (e.rank == 'Thường' && e.role == 'user') { %>
+                                    <tr>
+                                        <td><%= e.name %></td>
+                                        <td class="text-center"><%= e.phone %></td>
+                                        <td class="text-center"><%= e.score %></td>
+                                        <% if (user.role=='super admin' ) { %>
+                                        <td class="text-center">
+                                            <button class="btn btn-success btn-sm" title="Thêm quyền admin">
+                                                <i class="far fa-user-plus"></i>
+                                            </button>
+                                        </td>
+                                        <% } %>
+                                    </tr>
+                                    <% } %> <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="bac" role="tabpanel">
+                            <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-3">Tên khách hàng</th>
+                                        <th class="col-md-3 text-center">Số điện thoại</th>
+                                        <th class="col-md-3 text-center">Điểm</th>
+                                        <th class="col-md-3 text-center">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% users.forEach(e=> { %> <% if (e.rank=='Bạc' && e.role=='user' ) { %>
+                                    <tr>
+                                        <td><%= e.name %></td>
+                                        <td class="text-center"><%= e.phone %></td>
+                                        <td class="text-center"><%= e.score %></td>
+                                        <td></td>
+                                    </tr>
+                                    <% } %> <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="vang" role="tabpanel">
+                            <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-3">Tên khách hàng</th>
+                                        <th class="col-md-3 text-center">Số điện thoại</th>
+                                        <th class="col-md-3 text-center">Điểm</th>
+                                        <th class="col-md-3 text-center">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% users.forEach(e=> { %> <% if (e.rank=='Vàng' && e.role=='user' ) { %>
+                                    <tr>
+                                        <td><%= e.name %></td>
+                                        <td class="text-center"><%= e.phone %></td>
+                                        <td class="text-center"><%= e.score %></td>
+                                        <td></td>
+                                    </tr>
+                                    <% } %> <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="kim-cuong" role="tabpanel">
+                            <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-3">Tên khách hàng</th>
+                                        <th class="col-md-3 text-center">Số điện thoại</th>
+                                        <th class="col-md-3 text-center">Điểm</th>
+                                        <th class="col-md-3 text-center">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% users.forEach(e=> { %> <% if (e.rank=='Kim cương' && e.role=='user' ) { %>
+                                    <tr>
+                                        <td><%= e.name %></td>
+                                        <td class="text-center"><%= e.phone %></td>
+                                        <td class="text-center"><%= e.score %></td>
+                                        <td></td>
+                                    </tr>
+                                    <% } %> <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% if (user.role=='super admin') { %>
+                        <div class="tab-pane fade" id="admin" role="tabpanel">
+                            <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-3">Tên khách hàng</th>
+                                        <th class="col-md-3 text-center">Số điện thoại</th>
+                                        <th class="col-md-3 text-center">Điểm</th>
+                                        <th class="col-md-3 text-center">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% users.forEach(e=> { %> <% if (e.role=='admin') { %>
+                                    <tr>
+                                        <td><%= e.name %></td>
+                                        <td class="text-center"><%= e.phone %></td>
+                                        <td class="text-center"><%= e.score %></td>
+                                        <td></td>
+                                    </tr>
+                                    <% } %> <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<form id="delete-order" method="post"></form>
+<form id="update-order" method="post"></form>
+<script>
+    // var updateForm = document.getElementById('update-order');
+    // var deleteForm = document.getElementById('delete-order');
+    // const updateOrder = (id) => {
+    //     sAlert
+    //         .fire({
+    //             title: 'Xác nhận!',
+    //             text: 'Đơn hàng sẽ được cập nhật trạng thái',
+    //             icon: 'warning',
+    //             showCancelButton: true,
+    //             confirmButtonText: 'Cập nhật',
+    //             cancelButtonText: 'Hủy',
+    //         })
+    //         .then((result) => {
+    //             if (result.isConfirmed) {
+    //                 updateForm.action = `/admin/orders/${id}/update?_method=PATCH`;
+    //                 updateForm.submit();
+    //             }
+    //         });
+    // };
+    // const deleteOrder = (id) => {
+    //     sAlert
+    //         .fire({
+    //             title: 'Xác nhận!',
+    //             text: 'Đơn hàng sẽ được xóa khỏi hệ thống',
+    //             icon: 'warning',
+    //             showCancelButton: true,
+    //             confirmButtonText: 'Xóa',
+    //             cancelButtonText: 'Hủy',
+    //         })
+    //         .then((result) => {
+    //             if (result.isConfirmed) {
+    //                 deleteForm.action = `/admin/orders/${id}/delete?_method=DELETE`;
+    //                 deleteForm.submit();
+    //             }
+    //         });
+    // };
+</script>
