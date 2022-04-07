@@ -49,8 +49,10 @@
                                 <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th class="col-md-4">Tiêu đề tin tức</th>
+                                            <th class="col-md-5">Tiêu đề tin tức</th>
                                             <th class="col-md-3">Tác giả</th>
+                                            <th class="col-md-1"><i class="far fa-eye"></i></th>
+                                            <th class="col-md-1"><i class="far fa-comment-alt-lines"></i></th>
                                             <th class="col-md-2">Thao tác</th>
                                         </tr>
                                     </thead>
@@ -65,6 +67,8 @@
                                                 </a>
                                             </td>
                                             <td><%= e.user.name %></td>
+                                            <td><%= e.view %></td>
+                                            <td><%= e.comment %></td>
                                             <td>
                                                 <a href="/admin/story/<%= e.slug %>/edit">
                                                     <button class="btn btn-success btn-sm">
@@ -73,7 +77,7 @@
                                                 </a>
                                                 <button
                                                     class="btn btn-danger btn-sm ml-2"
-                                                    onclick="deleteProduct('<%= e.slug %>')"
+                                                    onclick="deleteStory('<%= e.slug %>')"
                                                 >
                                                     <i class="far fa-trash"></i>
                                                 </button>
@@ -129,14 +133,14 @@
         </div>
     </div>
 </section>
-<form id="delete-product" method="post"></form>
-<!-- <script>
-    var deleteForm = document.getElementById('delete-product');
-    const deleteProduct = (slug) => {
+<form id="delete-story" method="post"></form>
+<script>
+    var deleteForm = document.getElementById('delete-story');
+    const deleteStory = (slug) => {
         sAlert
             .fire({
                 title: 'Bạn có chắc chắn?',
-                text: 'Sản phẩm sẽ được xóa khỏi hệ thống!',
+                text: 'Tin tức sẽ được xóa khỏi hệ thống!',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Xóa',
@@ -144,9 +148,9 @@
             })
             .then((result) => {
                 if (result.isConfirmed) {
-                    deleteForm.action = `/admin/product/${slug}/delete?_method=DELETE`;
+                    deleteForm.action = `/admin/story/${slug}/delete?_method=DELETE`;
                     deleteForm.submit();
                 }
             });
     };
-</script> -->
+</script>

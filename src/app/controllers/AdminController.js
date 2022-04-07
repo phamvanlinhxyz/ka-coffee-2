@@ -3,6 +3,7 @@ const Order = require('../models/Order');
 const Story = require('../models/Story');
 const User = require('../models/User');
 const Tag = require('../models/Tag');
+const Comment = require('../models/Comment');
 
 // [GET] /admin/products
 const getProductPage = async (req, res) => {
@@ -84,7 +85,9 @@ const deleteProduct = async (req, res) => {
         const slug = req.params.slug;
         await Product.findOneAndDelete({ slug });
         res.status(200).redirect('/admin/products');
-    } catch (error) {}
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 // [GET] /admin/orders
@@ -231,6 +234,31 @@ const editStory = async (req, res) => {
     }
 };
 
+// [DELETE] /story/:slug/delete
+const deleteStory = async (req, res) => {
+    try {
+        const slug = req.params.slug;
+        const story = await Story.findOneAndDelete({ slug });
+        await Comment.deleteMany({ commentedAt: story._id });
+
+        var tags = await Tag.findOne();
+        for (let i = 0; i < story.categories.length; i++) {
+            const e = story.categories[i];
+            const s = await Story.count({ categories: e });
+            if (!s) {
+                tags.tags = tags.tags.filter((tag) => {
+                    return tag != e;
+                });
+            }
+        }
+        await tags.save();
+
+        res.status(200).redirect('/admin/stories');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
     getProductPage,
     addProductPage,
@@ -244,4 +272,5 @@ module.exports = {
     addStory,
     editStoryPage,
     editStory,
+    deleteStory,
 };

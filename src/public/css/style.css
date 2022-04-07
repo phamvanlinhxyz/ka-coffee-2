@@ -11105,6 +11105,30 @@ h5,
     background: transparent;
     color: #1e88e5;
 }
+.btn.btn-secondary:hover {
+    border: 1px solid #5a6268;
+    background: transparent;
+    color: #5a6268;
+}
+.btn.btn-success:hover {
+    border: 1px solid #28a745;
+    background: transparent;
+    color: #28a745;
+}
+.btn.btn-danger:hover {
+    border: 1px solid #dc3545;
+    background: transparent;
+    color: #dc3545;
+}
+.btn.btn-dark:hover {
+    border: 1px solid #343a40;
+    background: transparent;
+    color: #343a40;
+}
+.btn.btn-light:hover {
+    border: 1px solid #f8f9fa;
+    background: transparent;
+}
 .btn.btn-primary.btn-outline-primary {
     border: 1px solid #1e88e5;
     background: transparent;
