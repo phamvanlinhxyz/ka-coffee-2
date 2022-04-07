@@ -210,6 +210,11 @@ const editStory = async (req, res) => {
                 return category != '';
             });
 
+        if (req.file) {
+            updateForm['thumbnail'] = '/uploads/story/' + req.file.filename;
+        }
+        const story = await Story.findOneAndUpdate({ slug }, updateForm, { new: true });
+
         var tagsDB = await Tag.findOne({});
         if (!tagsDB) {
             tagsDB = await Tag.create({
@@ -221,13 +226,18 @@ const editStory = async (req, res) => {
                     tagsDB.tags = [...tagsDB.tags, e];
                 }
             });
+            for (let i = 0; i < tagsDB.tags.length; i++) {
+                const e = tagsDB.tags[i];
+                const s = await Story.count({ categories: e });
+                if (!s) {
+                    tagsDB.tags = tagsDB.tags.filter((tag) => {
+                        return tag != e;
+                    });
+                }
+            }
             await tagsDB.save();
         }
 
-        if (req.file) {
-            updateForm['thumbnail'] = '/uploads/story/' + req.file.filename;
-        }
-        const story = await Story.findOneAndUpdate({ slug }, updateForm, { new: true });
         res.status(200).redirect('/admin/stories');
     } catch (error) {
         console.log(error);

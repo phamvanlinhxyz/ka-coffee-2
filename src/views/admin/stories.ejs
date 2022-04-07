@@ -59,17 +59,17 @@
                                     <tbody>
                                         <% stories.forEach(function(e){ %>
                                         <tr>
-                                            <td>
+                                            <td class="col-md-5">
                                                 <a class="ka-link" href="/stories/<%= e.slug %>">
                                                     <img src="<%= e.thumbnail %>" class="rounded-circle" width="30" height="30"
                                                         alt="" />
                                                     <%= e.title %>
                                                 </a>
                                             </td>
-                                            <td><%= e.user.name %></td>
-                                            <td><%= e.view %></td>
-                                            <td><%= e.comment %></td>
-                                            <td>
+                                            <td class="col-md-3"><%= e.user.name %></td>
+                                            <td class="col-md-1"><%= e.view %></td>
+                                            <td class="col-md-1"><%= e.comment %></td>
+                                            <td class="col-md-2">
                                                 <a href="/admin/story/<%= e.slug %>/edit">
                                                     <button class="btn btn-success btn-sm">
                                                         <i class="far fa-pen"></i>

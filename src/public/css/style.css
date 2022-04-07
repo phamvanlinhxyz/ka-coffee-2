@@ -11452,6 +11452,7 @@ h5,
 }
 
 .blog-entry {
+    height: calc(100% - 30px);
     background: #fff;
 }
 @media (min-width: 768px) {
@@ -12861,4 +12862,8 @@ textarea.form-control {
     width: 48px;
     border-radius: 5px;
     margin-left: 20px;
+}
+
+#comments:target {
+    padding-top: 60px !important;
 }

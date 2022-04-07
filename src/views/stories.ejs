@@ -44,7 +44,7 @@
                         </h3>
                         <p class="clearfix">
                             <a href="/stories/<%= e.slug %>" class="float-left read">Read more</a>
-                            <a href="#" class="float-right meta-chat"><span class="icon-chat"></span> <%= e.comment %></a>
+                            <a href="/stories/<%= e.slug %>#comments" class="float-right meta-chat"><span class="icon-chat"></span> <%= e.comment %></a>
                         </p>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                     <ul>
                         <li>
                             <% if (page > 1) { %>
-                            <a href="/admin/stories?page=<%= page - 1 %>">
+                            <a href="/stories?page=<%= page - 1 %>">
                                 <i class="far fa-angle-left"></i>
                             </a>
                             <% } else { %>
@@ -69,16 +69,16 @@
                         </li>
                         <% for(var i = 1; i <= pages; i++) { %> <% if (page == i) { %>
                         <li class="active">
-                            <a href="/admin/stories?page=<%= i %>"> <%= i %> </a>
+                            <a href="/stories?page=<%= i %>"> <%= i %> </a>
                         </li>
                         <% } else { %>
                         <li>
-                            <a href="/admin/stories?page=<%= i %>"> <%= i %> </a>
+                            <a href="/stories?page=<%= i %>"> <%= i %> </a>
                         </li>
                         <% } %> <% } %>
                         <li>
                             <% if (page < pages) { %>
-                            <a href="/admin/stories?page=<%= page + 1 %>">
+                            <a href="/stories?page=<%= page + 1 %>">
                                 <i class="far fa-angle-right"></i>
                             </a>
                             <% } else { %>
