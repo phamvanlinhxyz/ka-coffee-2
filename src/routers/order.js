@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get('/detail/:id', detailOrder);
 router.post('/create', authorizePermission('user'), createUserOrder);
-router.post('/create/admin', authorizePermission('admin'), createOrderByAdmin);
+router.post('/create/admin', authorizePermission('admin', 'super admin'), createOrderByAdmin);
 router.post('/create/guest', createOrderByGuest);
 
 module.exports = router;

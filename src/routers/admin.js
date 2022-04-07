@@ -15,8 +15,10 @@ const {
     editStory,
     deleteStory,
     getUsersPage,
+    updateUserRole,
 } = require('../app/controllers/AdminController');
 const { updateOrder, deleteOrder, getEditOrderPage, editOrder } = require('../app/controllers/OrderController');
+const { authorizePermission } = require('../app/middleware/AuthMiddleware');
 const router = express.Router();
 
 var productStorage = multer.diskStorage({
@@ -59,6 +61,7 @@ router.route('/story/:slug/edit').get(editStoryPage).put(uploadStrI.single('thum
 router.delete('/story/:slug/delete', deleteStory);
 
 // admin/users
-router.get('/users', getUsersPage)
+router.get('/users', getUsersPage);
+router.post('/users/:id/update', authorizePermission('super admin'), updateUserRole);
 
 module.exports = router;

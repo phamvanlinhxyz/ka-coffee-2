@@ -51,8 +51,8 @@
                                         <tr>
                                             <th class="col-md-5">Tiêu đề tin tức</th>
                                             <th class="col-md-3">Tác giả</th>
-                                            <th class="col-md-1"><i class="far fa-eye"></i></th>
-                                            <th class="col-md-1"><i class="far fa-comment-alt-lines"></i></th>
+                                            <th class="col-md-1 text-center"><i class="far fa-eye"></i></th>
+                                            <th class="col-md-1 text-center"><i class="far fa-comment-alt-lines"></i></th>
                                             <th class="col-md-2">Thao tác</th>
                                         </tr>
                                     </thead>
@@ -67,8 +67,8 @@
                                                 </a>
                                             </td>
                                             <td class="col-md-3"><%= e.user.name %></td>
-                                            <td class="col-md-1"><%= e.view %></td>
-                                            <td class="col-md-1"><%= e.comment %></td>
+                                            <td class="col-md-1 text-center"><%= e.view %></td>
+                                            <td class="col-md-1 text-center"><%= e.comment %></td>
                                             <td class="col-md-2">
                                                 <a href="/admin/story/<%= e.slug %>/edit">
                                                     <button class="btn btn-success btn-sm">

@@ -26,7 +26,7 @@
                         <img src="<%= user.avatar ? user.avatar : '/images/avt.jpg' %>" alt="" class="nav-item-user-img mr-1 mb-1" />
                         <span class="nav-item-user-name"><%= user.name %></span>
                         <ul class="nav-item-user-menu">
-                            <% if( user.role == "admin" ) { %>
+                            <% if( user.role == "admin" || user.role == "super admin" ) { %>
                             <li class="nav-item-user-item">
                                 <a href="/admin/products">Quản lí cửa hàng </a>
                             </li>

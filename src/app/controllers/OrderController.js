@@ -167,7 +167,12 @@ const detailOrder = async (req, res) => {
                 select: 'image name price slug',
             },
         });
-        if (order && (req.user.role == 'admin' || req.user._id.toString() == order.user.toString())) {
+        if (
+            order &&
+            (req.user.role == 'admin' ||
+                req.user.role == 'super admin' ||
+                (order.user && req.user._id.toString() == order.user.toString()))
+        ) {
             return res.status(200).render('order/detail', {
                 user: req.user,
                 title: 'Chi tiết đơn hàng',

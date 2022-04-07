@@ -100,7 +100,11 @@
                                         <td class="text-center"><%= e.score %></td>
                                         <% if (user.role=='super admin' ) { %>
                                         <td class="text-center">
-                                            <button class="btn btn-success btn-sm" title="Thêm quyền admin">
+                                            <button
+                                                class="btn btn-success btn-sm"
+                                                title="Thêm quyền admin"
+                                                onclick="updateUser('<%= e._id %>')"
+                                            >
                                                 <i class="far fa-user-plus"></i>
                                             </button>
                                         </td>
@@ -117,16 +121,28 @@
                                         <th class="col-md-3">Tên khách hàng</th>
                                         <th class="col-md-3 text-center">Số điện thoại</th>
                                         <th class="col-md-3 text-center">Điểm</th>
+                                        <% if (user.role=='super admin') { %>
                                         <th class="col-md-3 text-center">Thao tác</th>
+                                        <% } %>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% users.forEach(e=> { %> <% if (e.rank=='Bạc' && e.role=='user' ) { %>
+                                    <% users.forEach(e => { %> <% if (e.rank == 'Bạc' && e.role == 'user') { %>
                                     <tr>
                                         <td><%= e.name %></td>
                                         <td class="text-center"><%= e.phone %></td>
                                         <td class="text-center"><%= e.score %></td>
-                                        <td></td>
+                                        <% if (user.role=='super admin' ) { %>
+                                        <td class="text-center">
+                                            <button
+                                                class="btn btn-success btn-sm"
+                                                title="Thêm quyền admin"
+                                                onclick="updateUser('<%= e._id %>')"
+                                            >
+                                                <i class="far fa-user-plus"></i>
+                                            </button>
+                                        </td>
+                                        <% } %>
                                     </tr>
                                     <% } %> <% }) %>
                                 </tbody>
@@ -139,16 +155,28 @@
                                         <th class="col-md-3">Tên khách hàng</th>
                                         <th class="col-md-3 text-center">Số điện thoại</th>
                                         <th class="col-md-3 text-center">Điểm</th>
+                                        <% if (user.role=='super admin') { %>
                                         <th class="col-md-3 text-center">Thao tác</th>
+                                        <% } %>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% users.forEach(e=> { %> <% if (e.rank=='Vàng' && e.role=='user' ) { %>
+                                    <% users.forEach(e => { %> <% if (e.rank == 'Vàng' && e.role == 'user') { %>
                                     <tr>
                                         <td><%= e.name %></td>
                                         <td class="text-center"><%= e.phone %></td>
                                         <td class="text-center"><%= e.score %></td>
-                                        <td></td>
+                                        <% if (user.role=='super admin' ) { %>
+                                        <td class="text-center">
+                                            <button
+                                                class="btn btn-success btn-sm"
+                                                title="Thêm quyền admin"
+                                                onclick="updateUser('<%= e._id %>')"
+                                            >
+                                                <i class="far fa-user-plus"></i>
+                                            </button>
+                                        </td>
+                                        <% } %>
                                     </tr>
                                     <% } %> <% }) %>
                                 </tbody>
@@ -161,16 +189,28 @@
                                         <th class="col-md-3">Tên khách hàng</th>
                                         <th class="col-md-3 text-center">Số điện thoại</th>
                                         <th class="col-md-3 text-center">Điểm</th>
+                                        <% if (user.role=='super admin') { %>
                                         <th class="col-md-3 text-center">Thao tác</th>
+                                        <% } %>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% users.forEach(e=> { %> <% if (e.rank=='Kim cương' && e.role=='user' ) { %>
+                                    <% users.forEach(e => { %> <% if (e.rank == 'Kim cương' && e.role == 'user') { %>
                                     <tr>
                                         <td><%= e.name %></td>
                                         <td class="text-center"><%= e.phone %></td>
                                         <td class="text-center"><%= e.score %></td>
-                                        <td></td>
+                                        <% if (user.role=='super admin' ) { %>
+                                        <td class="text-center">
+                                            <button
+                                                class="btn btn-success btn-sm"
+                                                title="Thêm quyền admin"
+                                                onclick="updateUser('<%= e._id %>')"
+                                            >
+                                                <i class="far fa-user-plus"></i>
+                                            </button>
+                                        </td>
+                                        <% } %>
                                     </tr>
                                     <% } %> <% }) %>
                                 </tbody>
@@ -184,16 +224,28 @@
                                         <th class="col-md-3">Tên khách hàng</th>
                                         <th class="col-md-3 text-center">Số điện thoại</th>
                                         <th class="col-md-3 text-center">Điểm</th>
+                                        <% if (user.role=='super admin') { %>
                                         <th class="col-md-3 text-center">Thao tác</th>
+                                        <% } %>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% users.forEach(e=> { %> <% if (e.role=='admin') { %>
+                                    <% users.forEach(e => { %> <% if (e.role == 'admin') { %>
                                     <tr>
                                         <td><%= e.name %></td>
                                         <td class="text-center"><%= e.phone %></td>
                                         <td class="text-center"><%= e.score %></td>
-                                        <td></td>
+                                        <% if (user.role=='super admin' ) { %>
+                                        <td class="text-center">
+                                            <button
+                                                class="btn btn-danger btn-sm"
+                                                title="Bỏ quyền admin"
+                                                onclick="updateUser('<%= e._id %>')"
+                                            >
+                                                <i class="far fa-user-minus"></i>
+                                            </button>
+                                        </td>
+                                        <% } %>
                                     </tr>
                                     <% } %> <% }) %>
                                 </tbody>
@@ -206,28 +258,28 @@
         </div>
     </div>
 </section>
-<form id="delete-order" method="post"></form>
-<form id="update-order" method="post"></form>
+<form id="update-user" method="post">
+    <input type="hidden" name="userId" />
+</form>
 <script>
-    // var updateForm = document.getElementById('update-order');
-    // var deleteForm = document.getElementById('delete-order');
-    // const updateOrder = (id) => {
-    //     sAlert
-    //         .fire({
-    //             title: 'Xác nhận!',
-    //             text: 'Đơn hàng sẽ được cập nhật trạng thái',
-    //             icon: 'warning',
-    //             showCancelButton: true,
-    //             confirmButtonText: 'Cập nhật',
-    //             cancelButtonText: 'Hủy',
-    //         })
-    //         .then((result) => {
-    //             if (result.isConfirmed) {
-    //                 updateForm.action = `/admin/orders/${id}/update?_method=PATCH`;
-    //                 updateForm.submit();
-    //             }
-    //         });
-    // };
+    var updateForm = document.getElementById('update-user');
+    const updateUser = (id) => {
+        sAlert
+            .fire({
+                title: 'Xác nhận!',
+                text: 'Quyền admin sẽ được cập nhật',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Cập nhật',
+                cancelButtonText: 'Hủy',
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    updateForm.action = `/admin/users/${id}/update`;
+                    updateForm.submit();
+                }
+            });
+    };
     // const deleteOrder = (id) => {
     //     sAlert
     //         .fire({

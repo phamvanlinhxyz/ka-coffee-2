@@ -284,6 +284,19 @@ const getUsersPage = async (req, res) => {
     }
 };
 
+// [POST] /admin/users/update
+const updateUserRole = async (req, res) => {
+    try {
+        const { id } = req.params;
+        var user = await User.findById(id);
+        user.role = user.role == 'user' ? 'admin' : 'user';
+        await user.save();
+        res.status(200).redirect('/admin/users');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
     getProductPage,
     addProductPage,
@@ -299,4 +312,5 @@ module.exports = {
     editStory,
     deleteStory,
     getUsersPage,
+    updateUserRole,
 };
