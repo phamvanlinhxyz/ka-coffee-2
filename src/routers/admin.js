@@ -16,6 +16,11 @@ const {
     deleteStory,
     getUsersPage,
     updateUserRole,
+    getDiscountPage,
+    addDiscountPage,
+    addDiscount,
+    editDiscountPage,
+    editDiscount,
 } = require('../app/controllers/AdminController');
 const { updateOrder, deleteOrder, getEditOrderPage, editOrder } = require('../app/controllers/OrderController');
 const { authorizePermission } = require('../app/middleware/AuthMiddleware');
@@ -63,5 +68,10 @@ router.delete('/story/:slug/delete', deleteStory);
 // admin/users
 router.get('/users', getUsersPage);
 router.post('/users/:id/update', authorizePermission('super admin'), updateUserRole);
+
+// admin/discounts
+router.get('/discounts', getDiscountPage);
+router.route('/discount/create').get(addDiscountPage).post(addDiscount);
+router.route('/discount/:id/edit').get(editDiscountPage).put(editDiscount);
 
 module.exports = router;

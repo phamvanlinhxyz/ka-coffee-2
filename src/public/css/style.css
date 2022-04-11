@@ -12867,3 +12867,8 @@ textarea.form-control {
 #comments:target {
     padding-top: 60px !important;
 }
+
+.discount .text {
+    width: calc(100% - 140px);
+    margin-left: 20px;
+}

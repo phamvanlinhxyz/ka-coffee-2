@@ -28,8 +28,28 @@
             </div>
             <div class="tab-content p-4 p-md-5 col-md-9" id="v-pills-tabContent">
                 <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
-                    <h3 class="mb-4">Cài đặt tài khoản</h3>
-                    <span>Bạn chưa có mã giảm giá nào!</span>
+                    <h3 class="mb-4">Danh sách mã giảm giá</h3>
+                    <div class="row">
+                        <% user.discount.forEach(e => { %>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex flex-row">
+                                <img class="rounded mr-3" src="/images/ka-discount.png" width="90" height="90" />
+                                <div class="discount-info">
+                                    <h5 class="mb-0"><%= e.name %></h5>
+                                    <span>
+                                        <% if (e.category == 'shipperFee') { %> Free ship <% } else if (e.category ==
+                                        'rate') { %> Giảm <%= e.minusPrice %>% <% } else { %> Giảm <%=
+                                        e.minusPrice.toLocaleString("vi", { style: "currency", currency: "VND" }) %> <%}
+                                        %> đơn hàng từ <%= e.minOrder.toLocaleString("vi", { style: "currency",
+                                        currency: "VND" }) %>
+                                    </span>
+                                    <br />
+                                    <span>HSD: <%= e.endTime.toLocaleString('vi-VN') %></span>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                    </div>
                 </div>
             </div>
         </div>

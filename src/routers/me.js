@@ -7,6 +7,7 @@ const {
     getListDiscountPage,
     updateAccount,
     updatePassword,
+    saveDiscount,
 } = require('../app/controllers/MeController');
 
 const router = express.Router();
@@ -24,6 +25,7 @@ const uploadAvtI = multer({ storage: avatarStorage });
 router.route('/account').get(getAccountPage).post(uploadAvtI.single('avatar'), updateAccount);
 router.route('/password').get(getPasswordPage).post(updatePassword);
 router.get('/orders', getListOrderPage);
+router.get('/discounts/:id/save', saveDiscount)
 router.get('/discounts', getListDiscountPage);
 
 module.exports = router;

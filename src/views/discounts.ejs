@@ -21,114 +21,58 @@
 <section class="ftco-section">
     <div class="container">
         <div class="row">
-            <div class="col-md-6 menu-wrap">
-                <div class="menus d-flex ftco-animate">
-                    <div class="mr-4">
-                        <img src="/images/bg_1.jpg" width="100px" height="100px" class="responsive-img" />
-                    </div>
-                    <div class="text">
-                        <div class="d-flex">
-                            <div class="one-half">
-                                <h2 class="responsive-header">Discount</h2>
-                            </div>
-                            <div class="one-forth">
-                                <h3><button class="btn btn-primary" type="submit">Lưu</button></h3>
-                            </div>
-                        </div>
-                        <div>
-                            <p>
-                                <span style="padding: 4px 8px; color: red; border: 1px solid"> Khách hàng vàng </span>
-                            </p>
-                            <p>
-                                <span>Giảm 200k</span>
-                            </p>
-                            <p><span>Bắt đầu</span></p>
-                            <p><span>Kết thúc</span></p>
-                        </div>
-                    </div>
+            <% discounts.forEach(e => { %>
+            <div class="col-md-6 mb-5">
+                <div class="d-flex ftco-animate discount">
+                    <div class=d-md-block d-none">
+                    <img src="/images/ka-discount.png" width="120px" height="120px" class="rounded" />
                 </div>
-            </div>
-            <div class="col-md-6 menu-wrap">
-                <div class="menus d-flex ftco-animate">
-                    <div class="mr-4">
-                        <img src="/images/bg_1.jpg" width="100px" height="100px" class="responsive-img" />
-                    </div>
-                    <div class="text">
-                        <div class="d-flex">
-                            <div class="one-half">
-                                <h2 class="responsive-header">Discount</h2>
-                            </div>
-                            <div class="one-forth">
+                <div class="text">
+                    <div class="d-flex justify-content-between">
+                        <div class="one-half">
+                            <h2 class="responsive-header"><%= e.name %></h2>
+                        </div>
+                        <div class="one-forth">
+                            <a href="/me/discounts/<%= e._id %>/save">
                                 <h3><button class="btn btn-primary" type="submit">Lưu</button></h3>
-                            </div>
-                        </div>
-                        <div>
-                            <p>
-                                <span style="padding: 4px 8px; color: red; border: 1px solid"> Khách hàng vàng </span>
-                            </p>
-                            <p>
-                                <span>Giảm 200k</span>
-                            </p>
-                            <p><span>Bắt đầu</span></p>
-                            <p><span>Kết thúc</span></p>
+                            </a>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6 menu-wrap">
-                <div class="menus d-flex ftco-animate">
-                    <div class="mr-4">
-                        <img src="/images/bg_1.jpg" width="100px" height="100px" class="responsive-img" />
-                    </div>
-                    <div class="text">
-                        <div class="d-flex">
-                            <div class="one-half">
-                                <h2 class="responsive-header">Discount</h2>
-                            </div>
-                            <div class="one-forth">
-                                <h3><button class="btn btn-primary" type="submit">Lưu</button></h3>
-                            </div>
-                        </div>
-                        <div>
-                            <p>
-                                <span style="padding: 4px 8px; color: red; border: 1px solid"> Khách hàng vàng </span>
-                            </p>
-                            <p>
-                                <span>Giảm 200k</span>
-                            </p>
-                            <p><span>Bắt đầu</span></p>
-                            <p><span>Kết thúc</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 menu-wrap">
-                <div class="menus d-flex ftco-animate">
-                    <div class="mr-4">
-                        <img src="/images/bg_1.jpg" width="100px" height="100px" class="responsive-img" />
-                    </div>
-                    <div class="text">
-                        <div class="d-flex">
-                            <div class="one-half">
-                                <h2 class="responsive-header">Discount</h2>
-                            </div>
-                            <div class="one-forth">
-                                <h3><button class="btn btn-primary" type="submit">Lưu</button></h3>
-                            </div>
-                        </div>
-                        <div>
-                            <p>
-                                <span style="padding: 4px 8px; color: red; border: 1px solid"> Khách hàng vàng </span>
-                            </p>
-                            <p>
-                                <span>Giảm 200k</span>
-                            </p>
-                            <p><span>Bắt đầu</span></p>
-                            <p><span>Kết thúc</span></p>
-                        </div>
+                    <div>
+                        <span style="padding: 4px 8px; color: red; border: 1px solid">
+                            <% if (e.rankUser == 'Tất cả') { %> Tất cả khách hàng <% } else { %> Khách hàng <%=
+                            e.rankUser %> <% } %>
+                        </span>
+                        <br />
+                        <% if (e.category == 'shipperFee') { %>
+                        <span>
+                            Free ship đơn hàng từ <%= e.minOrder.toLocaleString("vi", { style: "currency", currency:
+                            "VND" }) %>
+                        </span>
+                        <% } else if (e.category == 'rate') { %>
+                        <span>
+                            Giảm <%= e.minusPrice %>% đơn hàng từ <%= e.minOrder.toLocaleString("vi", { style:
+                            "currency", currency: "VND" }) %>
+                        </span>
+                        <% } else { %>
+                        <span>
+                            Giảm <%= e.minusPrice.toLocaleString("vi", { style: "currency", currency: "VND" })%> đơn
+                            hàng từ <%= e.minOrder.toLocaleString("vi", { style: "currency", currency: "VND" }) %>
+                        </span>
+                        <% } %>
+                        <br />
+                        <span>Bắt đầu: <%= e.startTime.toLocaleString('vi-VN') %></span>
+                        <br />
+                        <span>Kết thúc: <%= e.endTime.toLocaleString('vi-VN') %></span>
                     </div>
                 </div>
             </div>
         </div>
+        <% }) %>
     </div>
 </section>
+<% if (notification.message != '') { %>
+<script>
+    sAlert.fire('Thông báo', '<%= notification.message %>', '<%= notification.status %>');
+</script>
+<% } %>

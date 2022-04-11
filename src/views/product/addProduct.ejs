@@ -82,9 +82,9 @@
     });
 
     var form = document.querySelector('#add-product-form');
-    var valid = true;
     form.addEventListener('submit', (e) => {
         e.preventDefault();
+        var valid = true;
         form.querySelectorAll('input').forEach((input) => {
             if (input.name != 'realPrice' && input.value == '') {
                 sAlert.fire('Thất bại!', 'Các thông tin không được bỏ trống', 'warning');

@@ -3,6 +3,7 @@ const Product = require('../models/Product');
 const Story = require('../models/Story');
 const Tag = require('../models/Tag');
 const User = require('../models/User');
+const Discount = require('../models/Discount');
 
 // [GET] /
 const getHomepage = async (req, res) => {
@@ -44,10 +45,28 @@ const getMenu = async (req, res) => {
 
 // [GET] /discounts
 const getDiscounts = async (req, res) => {
-    res.render('discounts', {
-        user: req.user,
-        title: 'Khuyến mãi',
-    });
+    try {
+        var allDiscount = await Discount.find();
+        for (let i = 0; i < allDiscount.length; i++) {
+            const e = allDiscount[i];
+            if (new Date(e.endTime) - new Date() < 0) {
+                await e.remove();
+            }
+        }
+
+        const discounts = allDiscount.filter((e) => {
+            return new Date(e.startTime) - new Date() < 0;
+        });
+
+        res.status(200).render('discounts', {
+            user: req.user,
+            title: 'Khuyến mãi',
+            discounts,
+            notification: { status: 'success', message: '' },
+        });
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 // [GET] /stories

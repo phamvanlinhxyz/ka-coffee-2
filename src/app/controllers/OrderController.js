@@ -1,4 +1,3 @@
-const req = require('express/lib/request');
 const Cart = require('../models/Cart');
 const Order = require('../models/Order');
 const Product = require('../models/Product');

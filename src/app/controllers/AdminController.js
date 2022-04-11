@@ -4,6 +4,7 @@ const Story = require('../models/Story');
 const User = require('../models/User');
 const Tag = require('../models/Tag');
 const Comment = require('../models/Comment');
+const Discount = require('../models/Discount');
 
 // [GET] /admin/products
 const getProductPage = async (req, res) => {
@@ -297,6 +298,96 @@ const updateUserRole = async (req, res) => {
     }
 };
 
+// [GET] /admin/discounts
+const getDiscountPage = async (req, res) => {
+    const page = parseInt(req.query.page ? req.query.page : 1) - 1;
+    const perPage = 10;
+    try {
+        var allDiscount = await Discount.find();
+        for (let i = 0; i < allDiscount.length; i++) {
+            const e = allDiscount[i];
+            if (new Date(e.endTime) - new Date() < 0) {
+                await e.remove();
+            }
+        }
+
+        const totalDiscount = await Discount.count();
+        const discounts = await Discount.find()
+            .sort({ _id: -1 })
+            .limit(perPage)
+            .skip(perPage * page);
+
+        const pages = Math.ceil(totalDiscount / perPage);
+
+        res.status(200).render('admin/discounts', {
+            user: req.user,
+            title: 'Quản lý',
+            discounts,
+            page: page + 1,
+            pages: pages,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// [GET] /admin/discount/create
+const addDiscountPage = (req, res) => {
+    res.status(200).render('discount/addDiscount', {
+        user: req.user,
+        title: 'Thêm mã giảm giá',
+    });
+};
+
+// [POST] /admin/discount/create
+const addDiscount = async (req, res) => {
+    try {
+        var discount = req.body;
+        await Discount.create(discount);
+        res.status(200).redirect('/admin/discounts');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// [GET] /admin/discount/:id/edit
+const editDiscountPage = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const discount = await Discount.findById(id);
+        if (!discount) {
+            return res.status(404).render('404', {
+                user: req.user,
+                title: '404',
+            });
+        }
+        res.status(200).render('discount/editDiscount', {
+            user: req.user,
+            title: 'Chỉnh sửa mã giảm giá',
+            discount,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// [PUT] /admin/discount/:id/edit
+const editDiscount = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const discount = await Discount.findByIdAndUpdate(id, req.body, { new: true });
+        if (!discount) {
+            return res.status(404).render('404', {
+                user: req.user,
+                title: '404',
+            });
+        }
+        res.status(200).redirect('/admin/discounts');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
     getProductPage,
     addProductPage,
@@ -313,4 +404,9 @@ module.exports = {
     deleteStory,
     getUsersPage,
     updateUserRole,
+    getDiscountPage,
+    addDiscountPage,
+    addDiscount,
+    editDiscountPage,
+    editDiscount,
 };

@@ -57,9 +57,10 @@
     });
 
     var form = document.querySelector('#add-story-form');
-    var valid = true;
+
     form.addEventListener('submit', (e) => {
         e.preventDefault();
+        var valid = true;
         form.querySelectorAll('input').forEach((input) => {
             if (input.value == '') {
                 sAlert.fire('Thất bại!', 'Các thông tin không được bỏ trống', 'warning');
