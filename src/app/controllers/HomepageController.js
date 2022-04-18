@@ -49,13 +49,16 @@ const getDiscounts = async (req, res) => {
         var allDiscount = await Discount.find();
         for (let i = 0; i < allDiscount.length; i++) {
             const e = allDiscount[i];
+            console.log(new Date(e.endTime) - new Date());
             if (new Date(e.endTime) - new Date() < 0) {
                 await e.remove();
             }
         }
 
+        // console.log(allDiscount);
+
         const discounts = allDiscount.filter((e) => {
-            return new Date(e.startTime) - new Date() < 0;
+            return new Date(e.startTime) - new Date() < 0 && new Date(e.endTime) - new Date() > 0;
         });
 
         res.status(200).render('discounts', {

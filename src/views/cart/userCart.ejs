@@ -84,34 +84,42 @@
                         </div>
                         <div class="form-group">
                             <label>Mã giảm giá</label>
-                            <select type="text" name="discount" class="custom-select form-control">
+                            <select
+                                type="text"
+                                name="discount"
+                                class="custom-select form-control"
+                                onchange="selectDiscount()"
+                            >
                                 <option value="">Không áp dụng mã giảm giá</option>
+                                <% user.discount.forEach(e => { %>
+                                <option value="<%= e._id %>"><%= e.name %></option>
+                                <% }) %>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="d-flex justify-content-between">
                             <span>Tạm tính</span>
-                            <span class="cart-price">
+                            <span class="cart-price subtotal">
                                 <%= cart.subtotal.toLocaleString('vi', { style: 'currency', currency: 'VND', }) %>
                             </span>
                         </div>
                         <div class="d-flex justify-content-between">
                             <span>Phí giao hàng</span>
-                            <span class="cart-price">
+                            <span class="cart-price shippingFee">
                                 <%= (20000).toLocaleString('vi', { style: 'currency', currency: 'VND', }) %>
                             </span>
                         </div>
                         <div class="d-flex justify-content-between">
                             <span>Giảm giá</span>
-                            <span class="cart-price">
+                            <span class="cart-price minusPrice">
                                 <%= (0).toLocaleString('vi', { style: 'currency', currency: 'VND', }) %>
                             </span>
                         </div>
                         <hr />
                         <div class="d-flex justify-content-between">
                             <span>Tổng cộng</span>
-                            <span class="cart-price">
+                            <span class="cart-price total">
                                 <%= (cart.subtotal + 20000).toLocaleString('vi', { style: 'currency', currency: 'VND',
                                 })%>
                             </span>
@@ -145,5 +153,43 @@
                     formDelete.submit();
                 }
             });
+    };
+
+    const discount = document.querySelector('select[name="discount"]');
+    var subtotalLabel = document.querySelector('.subtotal');
+    var shippingFeeLabel = document.querySelector('.shippingFee');
+    var minusPriceLabel = document.querySelector('.minusPrice');
+    var totalLabel = document.querySelector('.total');
+    const selectDiscount = () => {
+        var subtotal = parseInt('<%= cart.subtotal %>');
+        var total = 0;
+        if (discount.value == '') {
+            minusPriceLabel.innerHTML = "<%= (0).toLocaleString('vi', { style: 'currency', currency: 'VND', }) %>";
+            totalLabel.innerHTML = (subtotal + 20000).toLocaleString('vi', { style: 'currency', currency: 'VND' });
+        } else {
+            ('<% user.discount.forEach(e => { %>');
+            if (discount.value == '<%= e._id %>') {
+                switch ('<%= e.category %>') {
+                    case 'money':
+                        total = subtotal - parseInt('<%= e.minusPrice %>') + 20000;
+                        minusPriceLabel.innerHTML =
+                            "<%= e.minusPrice.toLocaleString('vi', { style: 'currency', currency: 'VND', }) %>";
+                        totalLabel.innerHTML = total.toLocaleString('vi', { style: 'currency', currency: 'VND' });
+                        break;
+                    case 'rate':
+                        total = subtotal - (subtotal * parseInt('<%= e.minusPrice %>')) / 100 + 20000;
+                        minusPriceLabel.innerHTML = '<%= e.minusPrice %>%';
+                        totalLabel.innerHTML = total.toLocaleString('vi', { style: 'currency', currency: 'VND' });
+                        break;
+                    case 'shippingFee':
+                        minusPriceLabel.innerHTML = 'Free ship';
+                        totalLabel.innerHTML = subtotal.toLocaleString('vi', { style: 'currency', currency: 'VND' });
+                        break;
+                }
+            }
+            ('<% }) %>');
+        }
+
+        // console.log(discount.value);
     };
 </script>

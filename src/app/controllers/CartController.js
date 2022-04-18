@@ -1,7 +1,9 @@
 const Cart = require('../models/Cart');
+const Discount = require('../models/Discount');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const User = require('../models/User');
+const { getDiscounts } = require('./HomepageController');
 
 // [GET] /cart
 const getCart = async (req, res) => {
@@ -26,11 +28,25 @@ const getCart = async (req, res) => {
                 },
             });
         } else {
+            const user = await User.findById(req.user._id)
+                .populate({
+                    path: 'discount',
+                    model: Discount,
+                    select: 'name minOrder minusPrice category',
+                })
+                .select('-password');
+            user.cart = cart ? cart.orderItems.length : 0;
+            if (cart) {
+                user.discount = user.discount.filter((e) => {
+                    return e.minOrder < cart.subtotal;
+                });
+            }
             res.status(200).render('cart/userCart', {
-                user: req.user,
+                user,
                 title: 'Giỏ hàng',
-                cart: cart,
+                cart,
             });
+            // res.json(user);
         }
     } catch (error) {
         console.log(error);
