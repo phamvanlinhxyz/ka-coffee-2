@@ -1,4 +1,5 @@
 const Cart = require('../models/Cart');
+const Discount = require('../models/Discount');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const User = require('../models/User');
@@ -32,6 +33,9 @@ const evaluateScore = (user, subtotal) => {
 
 // [POST] /order/create
 const createUserOrder = async (req, res) => {
+    const { discount } = req.body;
+    var order;
+
     try {
         const cart = await Cart.findOne({
             user: req.user._id,
@@ -39,17 +43,50 @@ const createUserOrder = async (req, res) => {
         if (!cart) {
             return res.redirect('/me/orders');
         }
-        const order = new Order({
-            orderItems: cart.orderItems,
-            user: req.user._id,
-            name: req.body.name,
-            address: req.body.address,
-            phone: req.body.phone,
-            subtotal: cart.subtotal,
-            total: cart.subtotal + 20000,
-            form: 'Đặt online',
-        });
+        const discountDB = await Discount.findById(discount);
+        if (
+            discountDB.minOrder < cart.subtotal &&
+            discountDB.rankUser == req.user.rank &&
+            new Date(discountDB.startTime) < new Date()
+        ) {
+            cart.subtotal =
+                discountDB.category == 'money'
+                    ? cart.subtotal - discountDB.minusPrice
+                    : discountDB.category == 'rate'
+                    ? cart.subtotal - (cart.subtotal * discountDB.minusPrice) / 100
+                    : cart.subtotal;
+            order = new Order({
+                orderItems: cart.orderItems,
+                user: req.user._id,
+                name: req.body.name,
+                address: req.body.address,
+                phone: req.body.phone,
+                subtotal: cart.subtotal,
+                total: discountDB.category == 'shippingFee' ? cart.subtotal : cart.subtotal + 20000,
+                discount:
+                    discountDB.category == 'rate'
+                        ? `${discountDB.minusPrice} %`
+                        : discountDB.category == 'money'
+                        ? discountDB.minusPrice.toLocaleString('vi', { style: 'currency', currency: 'VND' })
+                        : 'Free ship',
+                form: 'Đặt online',
+            });
+        } else {
+            order = new Order({
+                orderItems: cart.orderItems,
+                user: req.user._id,
+                name: req.body.name,
+                address: req.body.address,
+                phone: req.body.phone,
+                subtotal: cart.subtotal,
+                total: cart.subtotal + 20000,
+                discount: '0 ₫',
+                form: 'Đặt online',
+            });
+        }
+
         await cart.remove();
+        // res.json(order)
         await order.save();
         req.user.cart = 0;
         const orders = await Order.find({ user: req.user._id }).sort({

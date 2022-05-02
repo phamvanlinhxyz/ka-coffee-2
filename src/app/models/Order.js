@@ -26,6 +26,7 @@ const Order = new mongoose.Schema(
         },
         subtotal: { type: Number, default: 0 },
         total: { type: Number, required: true },
+        discount: { type: String, required: true },
         form: {
             type: String,
             required: true,

@@ -131,6 +131,56 @@
                 </div>
             </form>
         </div>
+        <script>
+            const discount = document.querySelector('select[name="discount"]');
+            var subtotalLabel = document.querySelector('.subtotal');
+            var shippingFeeLabel = document.querySelector('.shippingFee');
+            var minusPriceLabel = document.querySelector('.minusPrice');
+            var totalLabel = document.querySelector('.total');
+            const selectDiscount = () => {
+                var subtotal = parseInt('<%= cart.subtotal %>');
+                var total = 0;
+                if (discount.value == '') {
+                    minusPriceLabel.innerHTML =
+                        "<%= (0).toLocaleString('vi', { style: 'currency', currency: 'VND', }) %>";
+                    totalLabel.innerHTML = (subtotal + 20000).toLocaleString('vi', {
+                        style: 'currency',
+                        currency: 'VND',
+                    });
+                } else {
+                    ('<% user.discount.forEach(e => { %>');
+                    if (discount.value == '<%= e._id %>') {
+                        switch ('<%= e.category %>') {
+                            case 'money':
+                                total = subtotal - parseInt('<%= e.minusPrice %>') + 20000;
+                                minusPriceLabel.innerHTML =
+                                    "<%= e.minusPrice.toLocaleString('vi', { style: 'currency', currency: 'VND', }) %>";
+                                totalLabel.innerHTML = total.toLocaleString('vi', {
+                                    style: 'currency',
+                                    currency: 'VND',
+                                });
+                                break;
+                            case 'rate':
+                                total = subtotal - (subtotal * parseInt('<%= e.minusPrice %>')) / 100 + 20000;
+                                minusPriceLabel.innerHTML = '<%= e.minusPrice %>%';
+                                totalLabel.innerHTML = total.toLocaleString('vi', {
+                                    style: 'currency',
+                                    currency: 'VND',
+                                });
+                                break;
+                            case 'shippingFee':
+                                minusPriceLabel.innerHTML = 'Free ship';
+                                totalLabel.innerHTML = subtotal.toLocaleString('vi', {
+                                    style: 'currency',
+                                    currency: 'VND',
+                                });
+                                break;
+                        }
+                    }
+                    ('<% }) %>');
+                }
+            };
+        </script>
         <% } %>
     </div>
 </section>
@@ -153,43 +203,5 @@
                     formDelete.submit();
                 }
             });
-    };
-
-    const discount = document.querySelector('select[name="discount"]');
-    var subtotalLabel = document.querySelector('.subtotal');
-    var shippingFeeLabel = document.querySelector('.shippingFee');
-    var minusPriceLabel = document.querySelector('.minusPrice');
-    var totalLabel = document.querySelector('.total');
-    const selectDiscount = () => {
-        var subtotal = parseInt('<%= cart.subtotal %>');
-        var total = 0;
-        if (discount.value == '') {
-            minusPriceLabel.innerHTML = "<%= (0).toLocaleString('vi', { style: 'currency', currency: 'VND', }) %>";
-            totalLabel.innerHTML = (subtotal + 20000).toLocaleString('vi', { style: 'currency', currency: 'VND' });
-        } else {
-            ('<% user.discount.forEach(e => { %>');
-            if (discount.value == '<%= e._id %>') {
-                switch ('<%= e.category %>') {
-                    case 'money':
-                        total = subtotal - parseInt('<%= e.minusPrice %>') + 20000;
-                        minusPriceLabel.innerHTML =
-                            "<%= e.minusPrice.toLocaleString('vi', { style: 'currency', currency: 'VND', }) %>";
-                        totalLabel.innerHTML = total.toLocaleString('vi', { style: 'currency', currency: 'VND' });
-                        break;
-                    case 'rate':
-                        total = subtotal - (subtotal * parseInt('<%= e.minusPrice %>')) / 100 + 20000;
-                        minusPriceLabel.innerHTML = '<%= e.minusPrice %>%';
-                        totalLabel.innerHTML = total.toLocaleString('vi', { style: 'currency', currency: 'VND' });
-                        break;
-                    case 'shippingFee':
-                        minusPriceLabel.innerHTML = 'Free ship';
-                        totalLabel.innerHTML = subtotal.toLocaleString('vi', { style: 'currency', currency: 'VND' });
-                        break;
-                }
-            }
-            ('<% }) %>');
-        }
-
-        // console.log(discount.value);
     };
 </script>

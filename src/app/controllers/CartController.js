@@ -32,13 +32,13 @@ const getCart = async (req, res) => {
                 .populate({
                     path: 'discount',
                     model: Discount,
-                    select: 'name minOrder minusPrice category',
+                    select: 'name minOrder minusPrice category endTime',
                 })
                 .select('-password');
             user.cart = cart ? cart.orderItems.length : 0;
             if (cart) {
                 user.discount = user.discount.filter((e) => {
-                    return e.minOrder < cart.subtotal;
+                    return e.minOrder < cart.subtotal && new Date(e.endTime) > new Date();
                 });
             }
             res.status(200).render('cart/userCart', {
